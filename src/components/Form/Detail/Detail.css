@@ -1,0 +1,11 @@
+@media (max-width: 992px) {
+  .detail {
+    margin-top: 18px;
+  }
+}
+
+@media (min-width: 992px) {
+  .detail {
+    padding-bottom: 18px;
+  }
+}

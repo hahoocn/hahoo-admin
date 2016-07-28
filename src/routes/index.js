@@ -1,7 +1,13 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
-import { App, Home, Login, NotFound } from '../containers';
-import { About } from '../components';
+import {
+  App,
+  Home,
+  Login,
+  NotFound,
+  Scml,
+  ScmlEdit,
+  ScmlView } from '../containers';
 import { isAuth } from '../actions/auth';
 
 export default function Routes(store) {
@@ -16,7 +22,10 @@ export default function Routes(store) {
     <Route path="/" component={App}>
       <Route onEnter={requireLogin}>
         <IndexRoute component={Home} />
-        <Route path="about" component={About} />
+        <Route path="scml/list" component={Scml} />
+        <Route path="scml/add" component={ScmlEdit} />
+        <Route path="scml/view/:id" component={ScmlView} />
+        <Route path="scml/edit/:id" component={ScmlEdit} />
       </Route>
       <Route path="login" component={Login} />
       <Route path="*" component={NotFound} status={404} />

@@ -1,0 +1,19 @@
+.btngroup {
+  margin-top: 30px;
+}
+
+@media (min-width: 768px) {
+  .btngroup div {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .btngroup div {
+    margin-bottom: 10px;
+  }
+  .btngroup button {
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+}

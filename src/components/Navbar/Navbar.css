@@ -1,0 +1,49 @@
+:global {
+  .navbar {
+    margin-bottom: 0;
+  }
+
+  .navbar-nav {
+    margin: 0 -15px;
+  }
+
+  .sidebar {
+    background-color: #f8f8f8;
+  }
+
+  .sidebar .navbar-collapse {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .sidebar ul li {
+    border-bottom: 1px solid #e7e7e7;
+  }
+
+  .sidebar ul li a.active {
+    background-color: #eee;
+  }
+
+  .sidebar .arrow {
+    float: right;
+  }
+
+  @media (min-width: 768px) {
+    .sidebar {
+      z-index: 1;
+      position: absolute;
+      width: 250px;
+      margin: 51px 0 0 -15px;
+    }
+    .sidebar .navbar-nav > li > a {
+      padding: 10px 15px;
+      width: 250px;
+    }
+    .sidebar .navbar-nav {
+      margin: 0;
+    }
+    .navbar-right {
+      padding-right: 15px;
+    }
+  }
+}

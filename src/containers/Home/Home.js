@@ -1,14 +1,13 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import config from '../../config';
-import { TopNavbar } from '../../components';
+import {
+  Navbar,
+  PageWrapper,
+  PageHeader,
+} from '../../components';
 
 class Home extends React.Component {
-  static propTypes = {
-    dispatch: React.PropTypes.func,
-    home: React.PropTypes.object,
-  };
-
   state = {}
 
   render() {
@@ -16,11 +15,12 @@ class Home extends React.Component {
     return (
       <div>
         <Helmet title={config.app.title} />
-        <TopNavbar />
+        <Navbar />
 
-        <div className="container">
-          <h1>Home</h1>
-        </div>
+        <PageWrapper>
+          <PageHeader title="首页" />
+
+        </PageWrapper>
 
       </div>
 		);

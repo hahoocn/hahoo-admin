@@ -1,0 +1,16 @@
+.order span {
+  margin-right: 3px;
+}
+
+.orderNum {
+  width: 45px;
+  display: inline-block;
+  margin: 0 0 0 10px;
+  height: 15px;
+
+  :global(.form-control) {
+    padding: 1px 3px;
+    height: 22px;
+    text-align: center;
+  }
+}
