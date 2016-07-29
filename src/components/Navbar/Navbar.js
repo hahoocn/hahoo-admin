@@ -1,6 +1,6 @@
 import React from 'react';
 import config from '../../config';
-import { IndexLink } from 'react-router';
+import IndexLink from 'react-router/lib/IndexLink';
 import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
 import Navbar from 'react-bootstrap/lib/Navbar';
 import Nav from 'react-bootstrap/lib/Nav';
