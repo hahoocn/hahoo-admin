@@ -27,6 +27,7 @@ import {
   Dialog
 } from '../../components';
 import { LinkContainer } from 'react-router-bootstrap';
+import Link from 'react-router/lib/Link';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
 import FormControl from 'react-bootstrap/lib/FormControl';
@@ -119,11 +120,10 @@ class Scml extends React.Component {
 
           <List>
             <ListRow>
-
               <ListColText className="col-xs-12 col-sm-4">
-                <LinkContainer to="/scml/view/1">
-                  <a>这个是标题，标题要长.这个是标题，标题要长这个是标题，标题要长这个是标题，标题要长</a>
-                </LinkContainer>
+                <Link to="/scml/view/1">
+                  这个是标题，标题要长.这个是标题，标题要长这个是标题，标题要长这个是标题，标题要长
+                </Link>
               </ListColText>
 
               <ListColStatus className="col-xs-8 col-sm-3">

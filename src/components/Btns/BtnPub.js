@@ -26,6 +26,8 @@ class BtnPub extends React.Component {
 
   render() {
     const { dropdown, ...rest } = this.props;
+    delete rest.onItemClick;
+    delete rest.itemId;
 
     /* eslint no-else-return: 0 */
     if (dropdown) {

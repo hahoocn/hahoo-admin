@@ -46,7 +46,7 @@ class TopNavbar extends React.Component {
           <Navbar.Toggle />
         </Navbar.Header>
 
-        <Navbar.Collapse eventKey={0}>
+        <Navbar.Collapse>
           <div className="navbar-default sidebar" role="navigation">
             <Nav activeKey={activeKey}>
 
