@@ -2,7 +2,6 @@ import React from 'react';
 import styles from './Pagination.css';
 import Pagination from 'react-bootstrap/lib/Pagination';
 import Pager from 'react-bootstrap/lib/Pager';
-import PageItem from 'react-bootstrap/lib/PageItem';
 
 class HahooPagination extends React.Component {
   static propTypes = {
@@ -37,6 +36,8 @@ class HahooPagination extends React.Component {
 
   render() {
     const { page, pageSize, pageCount, recordCount, ...rest } = this.props;
+    delete rest.pageSelect;
+
     const pageFrom = (page - 1) * pageSize + 1;
     let pageTo = page * pageSize;
     if (pageTo > recordCount) {
@@ -49,9 +50,9 @@ class HahooPagination extends React.Component {
         </div>
         <div className={`col-sm-4 ${styles.pager}`}>
           <Pager>
-            <PageItem href="#">&larr; 上一页</PageItem>
+            <Pager.Item href="#">&larr; 上一页</Pager.Item>
             {' '}
-            <PageItem href="#">下一页 &rarr;</PageItem>
+            <Pager.Item href="#">下一页 &rarr;</Pager.Item>
           </Pager>
         </div>
         <div className={`col-sm-5 ${styles.pagination}`}>
