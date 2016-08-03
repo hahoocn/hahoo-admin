@@ -24,7 +24,7 @@ export default function Routes(store) {
     <Route path="/" component={App}>
       <Route onEnter={requireLogin}>
         <IndexRoute component={Home} />
-        <Route path="scml/list" component={Scml} />
+        <Route path="scml/list(/:page)" component={Scml} />
         <Route path="scml/add" component={ScmlEdit} />
         <Route path="scml/view/:id" component={ScmlView} />
         <Route path="scml/edit/:id" component={ScmlEdit} />

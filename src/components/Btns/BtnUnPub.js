@@ -18,8 +18,6 @@ class BtnUnPub extends React.Component {
     this.handleClick = this.handleClick.bind(this);
   }
 
-  state = {}
-
   handleClick() {
     this.props.onItemClick(this.props.itemId);
   }
@@ -31,11 +29,11 @@ class BtnUnPub extends React.Component {
 
     /* eslint no-else-return: 0 */
     if (dropdown) {
-      return <MenuItem onClick={this.handleClick} {...rest}>
-        <i className="fa fa-times fa-fw" /> 停止发布</MenuItem>;
+      return (<MenuItem onClick={this.handleClick} {...rest}>
+        <i className="fa fa-times fa-fw" /> 停止发布</MenuItem>);
     } else {
-      return <Button onClick={this.handleClick} {...rest}>
-        <i className="fa fa-times fa-fw" /> 停止发布</Button>;
+      return (<Button onClick={this.handleClick} {...rest}>
+        <i className="fa fa-times fa-fw" /> 停止发布</Button>);
     }
   }
 }

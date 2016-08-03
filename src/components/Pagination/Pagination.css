@@ -17,6 +17,10 @@
   }
 }
 
+.pager > ul > li > a {
+  outline: none;
+}
+
 @media (max-width: 768px) {
   .pagination {
     padding-bottom: 50px;

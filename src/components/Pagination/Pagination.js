@@ -7,7 +7,6 @@ class HahooPagination extends React.Component {
   static propTypes = {
     page: React.PropTypes.number,
     pageSize: React.PropTypes.number,
-    pageCount: React.PropTypes.number,
     recordCount: React.PropTypes.number,
     pageSelect: React.PropTypes.func
   }
@@ -19,40 +18,60 @@ class HahooPagination extends React.Component {
   constructor(props) {
     super(props);
     this.handleSelect = this.handleSelect.bind(this);
+    this.handlePre = this.handlePre.bind(this);
+    this.handleNext = this.handleNext.bind(this);
   }
-
-  state = {}
 
   shouldComponentUpdate(nextProps) {
     return nextProps.page !== this.props.page ||
     nextProps.pageSize !== this.props.pageSize ||
-    nextProps.pageCount !== this.props.pageCount ||
     nextProps.recordCount !== this.props.recordCount;
   }
 
   handleSelect(eventKey) {
-    this.props.pageSelect(eventKey);
+    if (eventKey !== this.props.page) {
+      this.props.pageSelect(eventKey);
+    }
+  }
+
+  handlePre() {
+    const { page } = this.props;
+    if (page > 1) {
+      this.props.pageSelect(page - 1);
+    }
+  }
+
+  handleNext() {
+    const { page, pageSize, recordCount } = this.props;
+    const pageCount = Math.ceil(recordCount / pageSize);
+    if (page < pageCount) {
+      this.props.pageSelect(page + 1);
+    }
   }
 
   render() {
-    const { page, pageSize, pageCount, recordCount, ...rest } = this.props;
+    const { page, pageSize, recordCount, ...rest } = this.props;
     delete rest.pageSelect;
 
-    const pageFrom = (page - 1) * pageSize + 1;
-    let pageTo = page * pageSize;
-    if (pageTo > recordCount) {
-      pageTo = recordCount;
+    const pageCount = Math.ceil(recordCount / pageSize);
+    const recordFrom = (page - 1) * pageSize + 1;
+    let recordTo = page * pageSize;
+    if (recordTo > recordCount) {
+      recordTo = recordCount;
     }
     return (
       <div className="row">
         <div className={`col-sm-3 ${styles.pageinfo}`}>
-          {pageFrom} - {pageTo} 共{recordCount}条信息
+          {recordFrom} - {recordTo} 共{recordCount}条信息
         </div>
         <div className={`col-sm-4 ${styles.pager}`}>
           <Pager>
-            <Pager.Item href="#">&larr; 上一页</Pager.Item>
+            <Pager.Item disabled={page === 1} onSelect={this.handlePre}>&larr; 上一页</Pager.Item>
             {' '}
-            <Pager.Item href="#">下一页 &rarr;</Pager.Item>
+            <Pager.Item
+              disabled={page === pageCount}
+              onSelect={this.handleNext}
+            >下一页 &rarr;</Pager.Item>
           </Pager>
         </div>
         <div className={`col-sm-5 ${styles.pagination}`}>

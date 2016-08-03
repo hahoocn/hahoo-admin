@@ -20,6 +20,10 @@ class TopNavbar extends React.Component {
     navExpanded: false
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextState.navExpanded !== this.state.navExpanded;
+  }
+
   onNavItemClick = () => {
     this.setState({ navExpanded: false });
   }

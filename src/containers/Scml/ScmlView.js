@@ -12,7 +12,6 @@ import {
   BtnBack,
   BtnEdit,
   BtnDel,
-  Tap
 } from '../../components';
 import { LinkContainer } from 'react-router-bootstrap';
 import Col from 'react-bootstrap/lib/Col';
@@ -32,7 +31,7 @@ class ScmlView extends React.Component {
   render() {
     // const { params } = this.props;
     // const id = parseInt(params.id, 0);
-    const { router } = this.context;
+    // const { router } = this.context;
     return (
       <div>
         <Helmet title={config.pageTitle} />
@@ -41,9 +40,7 @@ class ScmlView extends React.Component {
         <PageWrapper>
           <PageHeader title="单分类多条目" subTitle="详情">
             <ButtonToolbar>
-              <Tap onTap={() => { router.goBack(); }}>
-                <BtnBack />
-              </Tap>
+              <BtnBack />
               <LinkContainer to="/scml/edit/1">
                 <BtnEdit />
               </LinkContainer>

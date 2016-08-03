@@ -12,8 +12,6 @@ class BtnCancel extends React.Component {
     title: React.PropTypes.string
   }
 
-  state = {}
-
   render() {
     const { title, ...rest } = this.props;
     return (

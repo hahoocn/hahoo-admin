@@ -9,7 +9,6 @@ class Dialog extends React.Component {
     type: React.PropTypes.string,
     cancelText: React.PropTypes.string,
     okText: React.PropTypes.string,
-    info: React.PropTypes.string,
     onClose: React.PropTypes.func,
     onClick: React.PropTypes.func,
     bgClass: React.PropTypes.string,
@@ -18,7 +17,11 @@ class Dialog extends React.Component {
     infoClassName: React.PropTypes.string,
     btnClass: React.PropTypes.string,
     okBtnClass: React.PropTypes.string,
-    cancelBtnClass: React.PropTypes.string
+    cancelBtnClass: React.PropTypes.string,
+    info: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.object
+    ])
   }
 
   static defaultProps = {
@@ -93,7 +96,7 @@ class Dialog extends React.Component {
 
     let dialog = undefined;
     if (!this.state.isClose) {
-      dialog = <div className={`${mainClass} ${className}`}>
+      dialog = <div className={`${mainClass}${className ? ` ${className}` : ''}`}>
         <div className={styles.dialog}>
           <div className={styles.dialogHdBlank}></div>
 					{dialogTitle && dialogTitle}

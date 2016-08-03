@@ -11,8 +11,6 @@ class BtnView extends React.Component {
     dropdown: React.PropTypes.bool
   }
 
-  state = {}
-
   render() {
     const { dropdown, ...rest } = this.props;
 

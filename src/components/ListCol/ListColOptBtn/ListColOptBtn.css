@@ -3,3 +3,7 @@
     margin-top: 17px;
   }
 }
+
+.opt ul li a {
+  padding: 5px 20px;
+}

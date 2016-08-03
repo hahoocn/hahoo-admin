@@ -11,7 +11,9 @@ class PageHeader extends React.Component {
     subTitle: React.PropTypes.string,
   }
 
-  state = {}
+  shouldComponentUpdate(nextProps) {
+    return nextProps.subTitle !== this.props.subTitle;
+  }
 
   render() {
     const { children, title, subTitle } = this.props;

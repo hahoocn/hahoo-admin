@@ -11,8 +11,6 @@ class Tap extends React.Component {
     tmoveThreshold: 0
   }
 
-  state = {}
-
   render() {
     const { children, ...rest } = this.props;
     return (

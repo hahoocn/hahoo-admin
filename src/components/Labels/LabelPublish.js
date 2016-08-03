@@ -1,12 +1,34 @@
 import React from 'react';
-import Label from 'react-bootstrap/lib/Label';
+import styles from './Label.css';
+import Tap from '../hahoo/Tap';
 
 class LabelPublish extends React.Component {
-  state = {}
+  static propTypes = {
+    onTap: React.PropTypes.func,
+    itemId: React.PropTypes.number
+  }
+
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return nextProps.itemId !== this.props.itemId;
+  }
+
+  handleClick() {
+    if (this.props.onTap) {
+      this.props.onTap(this.props.itemId);
+    }
+  }
 
   render() {
     return (
-      <Label bsStyle="primary">已发布</Label>
+      <Tap
+        className={`label label-primary ${styles.btn}`}
+        onTap={this.handleClick}
+      >已发布</Tap>
 		);
   }
 }
