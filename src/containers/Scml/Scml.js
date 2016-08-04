@@ -24,7 +24,8 @@ import {
   switchingPage,
   switchFlag,
   delItem,
-  order
+  order,
+  getScrollPosition
 } from '../../actions/scml';
 import { filterPage } from '../../utils/filter';
 import ListRow from './ListRow';
@@ -78,6 +79,7 @@ class Scml extends React.Component {
         (data.listUpdateTime && ((Date.now() - data.listUpdateTime) > 5 * 60 * 1000))) {
         this.props.dispatch(getList(page, this.state.pageSize));
       }
+      window.scrollTo(0, data.scrollY);
     }
   }
 
@@ -125,6 +127,11 @@ class Scml extends React.Component {
         }
       }
     }
+  }
+
+  componentWillUnmount() {
+    const { dispatch } = this.props;
+    dispatch(getScrollPosition(window.scrollY));
   }
 
   pageSelect(page) {

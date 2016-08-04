@@ -21,3 +21,21 @@ export function filterPage(page) {
 
   return result;
 }
+
+export function filterId(id) {
+  let result = 0;
+  if (!id || !isNumeric(`${id}`)) {
+    return -1;
+  }
+
+  try {
+    result = parseInt(id, 10);
+    if (result <= 0) {
+      return -1;
+    }
+  } catch (e) {
+    return -1;
+  }
+
+  return result;
+}

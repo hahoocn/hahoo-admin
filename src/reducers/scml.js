@@ -7,7 +7,9 @@ import {
   SWITCH_FLAG,
   SHOULD_UPDATE,
   DEL_ITEM,
-  ORDER_ITEM
+  ORDER_ITEM,
+  GET_DETAILS,
+  SCROLL_POSITION
 } from '../actions/scml';
 
 const defaultState = {
@@ -18,7 +20,8 @@ const defaultState = {
   page: 0,
   totalCount: 0,
   itemCount: 0,
-  items: []
+  items: [],
+  details: undefined
 };
 
 const scml = createReducer({
@@ -58,13 +61,27 @@ const scml = createReducer({
     };
   },
   [DEL_ITEM](state, action) {
-    return {
+    const result = {
       items: state.items.filter(item => item.id !== action.res.body.id)
     };
+    if (state.details && parseInt(state.details.id, 10) === action.res.body.id) {
+      result.details = undefined;
+    }
+    return result;
   },
   [ORDER_ITEM]() {
     return {};
   },
+  [GET_DETAILS](state, action) {
+    return {
+      details: action.res.body
+    };
+  },
+  [SCROLL_POSITION](state, action) {
+    return {
+      scrollY: action.scrollY
+    };
+  }
 }, defaultState);
 
 export default scml;

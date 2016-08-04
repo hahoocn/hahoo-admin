@@ -1,6 +1,6 @@
 import { createAction, createActionAsync } from 'redux-act-reducer';
 import { request, apiUrl } from './config';
-import { filterPage } from '../utils/filter';
+import { filterPage, filterId } from '../utils/filter';
 
 export const GET_LIST = 'GET_LIST';
 export const REFRESH_LIST = 'REFRESH_LIST';
@@ -10,10 +10,13 @@ export const SWITCH_FLAG = 'SWITCH_FLAG';
 export const SHOULD_UPDATE = 'SHOULD_UPDATE';
 export const DEL_ITEM = 'DEL_ITEM';
 export const ORDER_ITEM = 'ORDER_ITEM';
+export const GET_DETAILS = 'GET_DETAILS';
+export const SCROLL_POSITION = 'SCROLL_POSITION';
 
 export const setListStatus = createAction(LIST_STATUS, 'status');
 export const switchingPage = createAction(SWITCHING_PAGE, 'isSwitchingPage');
 export const shouldUpdate = createAction(SHOULD_UPDATE, 'shouldUpdate');
+export const getScrollPosition = createAction(SCROLL_POSITION, 'scrollY');
 
 async function getListApi(page, pageSize) {
   const newpage = filterPage(page);
@@ -182,5 +185,42 @@ export const order = createActionAsync(ORDER_ITEM, orderApi, {
   onSuccess(dispatch, res) {
     dispatch(shouldUpdate(false));
     dispatch(refreshList(res.body.page, res.body.pageSize));
+  }
+});
+
+async function getDetailsApi(id) {
+  const newId = filterId(id);
+  if (newId === -1) {
+    return Promise.reject('Id错误');
+  }
+
+  try {
+    const res = await request({
+      url: `${apiUrl}/scml/details`,
+      method: 'GET',
+      qs: {
+        id: newId
+      },
+    });
+
+    if (res.body.errmsg && res.body.errmsg !== 'ok') {
+      return Promise.reject(res.body.errmsg);
+    }
+
+    res.body.receivedAt = Date.now();
+
+    return Promise.resolve(res);
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
+
+export const getDetails = createActionAsync(GET_DETAILS, getDetailsApi, {
+  name: 'details',
+  onRequest(dispatch) {
+    dispatch(shouldUpdate(true));
+  },
+  onSuccess(dispatch) {
+    dispatch(shouldUpdate(false));
   }
 });
