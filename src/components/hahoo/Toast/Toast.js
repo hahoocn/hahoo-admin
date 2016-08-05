@@ -14,14 +14,14 @@ class Toast extends React.Component {
     isAutoClose: React.PropTypes.bool,
     isBlock: React.PropTypes.bool,
     onClose: React.PropTypes.func,
-    speed: React.PropTypes.number
+    closeSpeed: React.PropTypes.number
   };
 
   static defaultProps = {
     type: 'success',
     isBlock: false,
     isAutoClose: true,
-    speed: 1000
+    closeSpeed: 1000
   };
 
   state = {
@@ -30,7 +30,14 @@ class Toast extends React.Component {
 
   componentDidMount() {
     if (this.props.type !== 'loading' && this.props.isAutoClose) {
-      setTimeout(this.handleClose.bind(this), this.props.speed);
+      this.closeTimeout = setTimeout(this.handleClose.bind(this), this.props.closeSpeed);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.props.isAutoClose && !this.state.isClose && this.closeTimeout) {
+      clearTimeout(this.closeTimeout);
+      this.closeTimeout = false;
     }
   }
 
