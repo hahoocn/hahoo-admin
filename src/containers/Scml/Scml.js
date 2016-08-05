@@ -66,7 +66,12 @@ class Scml extends React.Component {
     delId: undefined,
     moveId: undefined,
     orderId: undefined,
-    newOrderId: undefined
+    newOrderId: undefined,
+    isLoading: false
+  }
+
+  componentWillMount() {
+    this.setState({ isLoading: true });
   }
 
   componentDidMount() {
@@ -79,7 +84,12 @@ class Scml extends React.Component {
         (data.listUpdateTime && ((Date.now() - data.listUpdateTime) > 5 * 60 * 1000))) {
         this.props.dispatch(getList(page, this.state.pageSize));
       }
-      window.scrollTo(0, data.scrollY);
+    }
+
+    if (this.state.isLoading) {
+      setTimeout(() => {
+        this.setState({ isLoading: false });
+      }, 50);
     }
   }
 
@@ -101,13 +111,14 @@ class Scml extends React.Component {
     }
     if (nextState.showDelDialog !== this.state.showDelDialog ||
       nextState.showMoveIdDialog !== this.state.showMoveIdDialog ||
-      nextState.newOrderId !== this.state.newOrderId) {
+      nextState.newOrderId !== this.state.newOrderId ||
+      nextState.isLoading !== this.state.isLoading) {
       return true;
     }
     return false;
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
     const { data, dispatch } = this.props;
     if (data.listStatus === 'updated') {
       if (data.isSwitchingPage) {
@@ -125,6 +136,10 @@ class Scml extends React.Component {
         page !== data.page) {
           dispatch(getList(page, this.state.pageSize));
         }
+      }
+
+      if (prevState.isLoading && !this.state.isLoading) {
+        window.scrollTo(0, this.props.data.scrollY);
       }
     }
   }
@@ -204,7 +219,8 @@ class Scml extends React.Component {
     const { data } = this.props;
 
     let loading = undefined;
-    if (data.asyncStatus && data.asyncStatus.list && data.asyncStatus.list.isFetching) {
+    if ((data.asyncStatus && data.asyncStatus.list && data.asyncStatus.list.isFetching) ||
+    this.state.isLoading) {
       loading = <Toast type="loading" title="加载数据" isBlock />;
     }
     if (data.asyncStatus && data.asyncStatus.switchFlag && data.asyncStatus.switchFlag.isFetching ||
@@ -213,10 +229,9 @@ class Scml extends React.Component {
       loading = <Toast type="loading" title="正在更新" isBlock />;
     }
 
-    let rows = undefined;
-    let pagination = undefined;
-    if (data.items && data.items.length > 0) {
-      rows = data.items.map((item) => (<ListRow
+    let pageWrapper = undefined;
+    if (!this.state.isLoading && data.items && data.items.length > 0) {
+      const rows = data.items.map((item) => (<ListRow
         key={item.id}
         item={item}
         onDelete={this.handleDel}
@@ -228,12 +243,29 @@ class Scml extends React.Component {
         onPopOrderIdPannel={this.handleMoveId}
       />));
 
-      pagination = <Pagination
+      const pagination = <Pagination
         page={data.page}
         pageSize={this.state.pageSize}
         recordCount={data.totalCount}
         pageSelect={this.pageSelect}
       />;
+
+      pageWrapper = <div>
+        <PageHeader title={config.moduleName} subTitle="列表">
+          <ButtonToolbar>
+            <LinkContainer to="/scml/add">
+              <BtnAdd />
+            </LinkContainer>
+            <BtnRefresh onItemClick={this.handleRefresh} />
+          </ButtonToolbar>
+        </PageHeader>
+
+        <List>
+        {rows && rows}
+        </List>
+
+        {pagination && pagination}
+      </div>;
     }
 
     return (
@@ -258,20 +290,7 @@ class Scml extends React.Component {
 
         {loading && loading}
         <PageWrapper>
-          <PageHeader title={config.moduleName} subTitle="列表">
-            <ButtonToolbar>
-              <LinkContainer to="/scml/add">
-                <BtnAdd />
-              </LinkContainer>
-              <BtnRefresh onItemClick={this.handleRefresh} />
-            </ButtonToolbar>
-          </PageHeader>
-
-          <List>
-            {rows && rows}
-          </List>
-
-          {pagination && pagination}
+          {pageWrapper}
         </PageWrapper>
 
       </div>

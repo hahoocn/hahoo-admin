@@ -20,6 +20,7 @@ const defaultState = {
   page: 0,
   totalCount: 0,
   itemCount: 0,
+  scrollY: 0,
   items: [],
   details: undefined
 };
