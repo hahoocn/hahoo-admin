@@ -38,3 +38,4 @@ export Loading from './hahoo/Loading/Loading';
 export Toast from './hahoo/Toast/Toast';
 export Dialog from './hahoo/Dialog/Dialog';
 export Toggle from './hahoo/Toggle/Toggle';
+export ToastAlert from './hahoo/ToastAlert/ToastAlert';
