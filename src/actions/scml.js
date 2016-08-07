@@ -3,20 +3,21 @@ import { request, apiUrl } from './config';
 import { filterPage, filterId } from '../utils/filter';
 
 export const GET_LIST = 'GET_LIST';
-export const REFRESH_LIST = 'REFRESH_LIST';
 export const LIST_STATUS = 'LIST_STATUS';
-export const SWITCHING_PAGE = 'SWITCHING_PAGE';
 export const SWITCH_FLAG = 'SWITCH_FLAG';
 export const SHOULD_UPDATE = 'SHOULD_UPDATE';
 export const DEL_ITEM = 'DEL_ITEM';
 export const ORDER_ITEM = 'ORDER_ITEM';
 export const GET_DETAILS = 'GET_DETAILS';
+export const GET_EDIT_DETAILS = 'GET_EDIT_DETAILS';
 export const SCROLL_POSITION = 'SCROLL_POSITION';
+export const EDIT = 'EDIT';
+export const CLEAN_ASYNC_STATUS = 'CLEAN_ASYNC_STATUS';
 
 export const setListStatus = createAction(LIST_STATUS, 'status');
-export const switchingPage = createAction(SWITCHING_PAGE, 'isSwitchingPage');
 export const shouldUpdate = createAction(SHOULD_UPDATE, 'shouldUpdate');
 export const getScrollPosition = createAction(SCROLL_POSITION, 'scrollY');
+export const cleanAsyncStatus = createAction(CLEAN_ASYNC_STATUS, 'asyncName');
 
 async function getListApi(page, pageSize) {
   const newpage = filterPage(page);
@@ -33,13 +34,11 @@ async function getListApi(page, pageSize) {
         count: pageSize
       },
     });
-    res.body.page = newpage;
-    res.body.listStatus = 'updated';
 
     if (res.body.errmsg && res.body.errmsg !== 'ok') {
       return Promise.reject(res.body.errmsg);
     }
-
+    res.body.page = newpage;
     return Promise.resolve(res);
   } catch (err) {
     return Promise.reject(err);
@@ -47,13 +46,6 @@ async function getListApi(page, pageSize) {
 }
 
 export const getList = createActionAsync(GET_LIST, getListApi, {
-  name: 'list',
-  onRequest(dispatch) {
-    dispatch(switchingPage(true));
-  }
-});
-
-export const refreshList = createActionAsync(REFRESH_LIST, getListApi, {
   name: 'list',
   onRequest(dispatch) {
     dispatch(shouldUpdate(true));
@@ -184,7 +176,7 @@ export const order = createActionAsync(ORDER_ITEM, orderApi, {
   },
   onSuccess(dispatch, res) {
     dispatch(shouldUpdate(false));
-    dispatch(refreshList(res.body.page, res.body.pageSize));
+    dispatch(getList(res.body.page, res.body.pageSize));
   }
 });
 
@@ -223,4 +215,47 @@ export const getDetails = createActionAsync(GET_DETAILS, getDetailsApi, {
   onSuccess(dispatch) {
     dispatch(shouldUpdate(false));
   }
+});
+
+export const getEditDetails = createActionAsync(GET_EDIT_DETAILS, getDetailsApi, {
+  name: 'editdetails'
+});
+
+async function editApi(body) {
+  const newId = parseInt(`${body.id}`, 10);
+  if (isNaN(newId) || newId < 0) {
+    return Promise.reject('Id错误');
+  }
+
+  let actType = 'add';
+  if (newId > 0) {
+    actType = 'update';
+  }
+  try {
+    const res = await request({
+      url: `${apiUrl}/scml/${actType}`,
+      method: 'POST',
+      body,
+    });
+
+    if (res.body.errmsg) {
+      return Promise.reject(res.body.errmsg);
+    }
+
+    if (!(res.body.response && res.body.response === 'success')) {
+      return Promise.reject('遇到错误');
+    }
+
+    res.body = body;
+    res.body.updateTime = Date.now();
+    res.body.receivedAt = Date.now();
+
+    return Promise.resolve(res);
+  } catch (err) {
+    return Promise.reject(err);
+  }
+}
+
+export const edit = createActionAsync(EDIT, editApi, {
+  name: 'edit'
 });

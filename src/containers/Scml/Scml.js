@@ -2,6 +2,13 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 import config from './config';
+import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import { filterPage } from '../../utils/filter';
+import ListRow from './ListRow';
+import toFloat from 'validator/lib/toFloat';
+import isDecimal from 'validator/lib/isDecimal';
+
 import {
   Navbar,
   PageWrapper,
@@ -13,24 +20,15 @@ import {
   Dialog,
   Toast
 } from '../../components';
-import { LinkContainer } from 'react-router-bootstrap';
-import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
-import FormControl from 'react-bootstrap/lib/FormControl';
 
 import {
   getList,
-  refreshList,
   setListStatus,
-  switchingPage,
   switchFlag,
   delItem,
   order,
   getScrollPosition
 } from '../../actions/scml';
-import { filterPage } from '../../utils/filter';
-import ListRow from './ListRow';
-import toFloat from 'validator/lib/toFloat';
-import isDecimal from 'validator/lib/isDecimal';
 
 class Scml extends React.Component {
   static propTypes = {
@@ -79,10 +77,11 @@ class Scml extends React.Component {
     if (page === -1) {
       this.context.router.push('/notfound');
     } else {
-      const { data } = this.props;
-      if (page !== data.page ||
+      const { data, dispatch } = this.props;
+      if (page !== data.page || data.items.length === 0 ||
         (data.listUpdateTime && ((Date.now() - data.listUpdateTime) > 5 * 60 * 1000))) {
-        this.props.dispatch(getList(page, this.state.pageSize));
+        dispatch(setListStatus('initPage'));
+        dispatch(getList(page, this.state.pageSize));
       }
     }
 
@@ -99,14 +98,11 @@ class Scml extends React.Component {
     if (page === -1) {
       return false;
     }
-    if (page !== data.page ||
+    if (page !== data.page || data.items.length === 0 ||
       (data.listUpdateTime && ((Date.now() - data.listUpdateTime) > 5 * 60 * 1000))) {
       return true;
     }
-    if (nextProps.data.isSwitchingPage) {
-      return true;
-    }
-    if (nextProps.data.shouldUpdate) {
+    if (data.shouldUpdate || nextProps.data.shouldUpdate) {
       return true;
     }
     if (nextState.showDelDialog !== this.state.showDelDialog ||
@@ -120,14 +116,22 @@ class Scml extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { data, dispatch } = this.props;
-    if (data.listStatus === 'updated') {
-      if (data.isSwitchingPage) {
-        window.scrollTo(0, 0);
-        this.context.router.push(`/scml/list/${data.page}`);
-        dispatch(switchingPage(false));
+    if ((data.asyncStatus && data.asyncStatus.list && !data.asyncStatus.list.isFetching) &&
+    (prevProps.data.asyncStatus && prevProps.data.asyncStatus.list &&
+      prevProps.data.asyncStatus.list.isFetching)) {
+      switch (data.listStatus) {
+        case 'initPage':
+          window.scrollTo(0, this.props.data.scrollY);
+          break;
+        case 'switchingPage':
+          window.scrollTo(0, 0);
+          this.context.router.push(`/scml/list/${data.page}`);
+          break;
+        default:
       }
       dispatch(setListStatus('ok'));
     } else {
+      // 直接从浏览器输入页码
       const page = filterPage(this.props.params.page);
       if (page === -1) {
         this.context.router.push('/notfound');
@@ -150,12 +154,14 @@ class Scml extends React.Component {
   }
 
   pageSelect(page) {
-    this.props.dispatch(getList(page, this.state.pageSize));
+    const { dispatch } = this.props;
+    dispatch(setListStatus('switchingPage'));
+    dispatch(getList(page, this.state.pageSize));
   }
 
   handleRefresh() {
     const { dispatch, params } = this.props;
-    dispatch(refreshList(params.page, this.state.pageSize));
+    dispatch(getList(params.page, this.state.pageSize));
   }
 
   handleDel(id) {
@@ -253,9 +259,7 @@ class Scml extends React.Component {
       pageWrapper = <div>
         <PageHeader title={config.moduleName} subTitle="列表">
           <ButtonToolbar>
-            <LinkContainer to="/scml/add">
-              <BtnAdd />
-            </LinkContainer>
+            <BtnAdd onItemClick={() => this.context.router.push('/scml/add')} />
             <BtnRefresh onItemClick={this.handleRefresh} />
           </ButtonToolbar>
         </PageHeader>

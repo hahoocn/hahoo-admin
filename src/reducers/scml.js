@@ -3,18 +3,19 @@ import {
   GET_LIST,
   REFRESH_LIST,
   LIST_STATUS,
-  SWITCHING_PAGE,
   SWITCH_FLAG,
   SHOULD_UPDATE,
   DEL_ITEM,
   ORDER_ITEM,
   GET_DETAILS,
-  SCROLL_POSITION
+  GET_EDIT_DETAILS,
+  SCROLL_POSITION,
+  EDIT,
+  CLEAN_ASYNC_STATUS
 } from '../actions/scml';
 
 const defaultState = {
   shouldUpdate: false,
-  isSwitchingPage: false,
   listStatus: undefined,
   listUpdateTime: undefined,
   page: 0,
@@ -22,18 +23,14 @@ const defaultState = {
   itemCount: 0,
   scrollY: 0,
   items: [],
-  details: undefined
+  details: undefined,
+  asyncStatus: undefined
 };
 
 const scml = createReducer({
   [LIST_STATUS](state, action) {
     return {
       listStatus: action.status
-    };
-  },
-  [SWITCHING_PAGE](state, action) {
-    return {
-      isSwitchingPage: action.isSwitchingPage
     };
   },
   [GET_LIST](state, action) {
@@ -49,11 +46,11 @@ const scml = createReducer({
     };
   },
   [SWITCH_FLAG](state, action) {
-    const obj = {};
-    obj[action.res.body.flagName] = action.res.body.flag;
     return {
+      details: state.details && state.details.id && state.details.id === action.res.body.id ?
+        undefined : state.details,
       items: state.items.map(item => (item.id === action.res.body.id ?
-        Object.assign({}, item, obj) : item))
+        Object.assign({}, item, { [action.res.body.flagName]: action.res.body.flag }) : item))
     };
   },
   [SHOULD_UPDATE](state, action) {
@@ -62,18 +59,23 @@ const scml = createReducer({
     };
   },
   [DEL_ITEM](state, action) {
-    const result = {
+    return {
+      details: state.details && state.details.id && state.details.id === action.res.body.id ?
+        undefined : state.details,
       items: state.items.filter(item => item.id !== action.res.body.id)
     };
-    if (state.details && parseInt(state.details.id, 10) === action.res.body.id) {
-      result.details = undefined;
-    }
-    return result;
   },
   [ORDER_ITEM]() {
-    return {};
+    return {
+      details: undefined
+    };
   },
   [GET_DETAILS](state, action) {
+    return {
+      details: action.res.body
+    };
+  },
+  [GET_EDIT_DETAILS](state, action) {
     return {
       details: action.res.body
     };
@@ -82,7 +84,24 @@ const scml = createReducer({
     return {
       scrollY: action.scrollY
     };
-  }
+  },
+  [EDIT](state, action) {
+    return {
+      page: action.res.body.id > 0 ? state.page : 1,
+      items: [],
+      details: action.res.body.id > 0 && state.details && state.details.id &&
+        state.details.id === action.res.body.id ?
+        Object.assign({}, state.details, action.res.body) :
+        state.details
+    };
+  },
+  [CLEAN_ASYNC_STATUS](state, action) {
+    return {
+      asyncStatus: action.asyncName ?
+        Object.assign({}, state.asyncStatus, { ...{ [action.asyncName]: undefined } }) :
+        undefined
+    };
+  },
 }, defaultState);
 
 export default scml;

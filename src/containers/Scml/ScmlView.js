@@ -41,13 +41,13 @@ class ScmlView extends React.Component {
   }
 
   state = {
+    isEnterLoading: false,
     isDeling: false,
     showDelDialog: false,
     delId: undefined
   }
 
-  componentDidMount() {
-    window.scrollTo(0, 0);
+  componentWillMount() {
     const id = filterId(this.props.params.id);
     if (id === -1) {
       this.context.router.push('/notfound');
@@ -56,7 +56,14 @@ class ScmlView extends React.Component {
       if (!data.details || parseInt(data.details.id, 10) !== id ||
         ((Date.now() - data.details.receivedAt) > 2 * 60 * 1000)) {
         this.props.dispatch(getDetails(id));
+        this.setState({ isEnterLoading: true });
       }
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.data.details && !this.state.isEnterLoading) {
+      window.scrollTo(0, 0);
     }
   }
 
@@ -69,13 +76,18 @@ class ScmlView extends React.Component {
         this.context.router.replace('/scml/list');
       }
     }
+    if (!nextProps.data.shouldUpdate && data.shouldUpdate && this.state.isEnterLoading) {
+      window.scrollTo(0, 0);
+      this.setState({ isEnterLoading: false });
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
     if (nextProps.data.shouldUpdate) {
       return true;
     }
-    if (nextState.showDelDialog !== this.state.showDelDialog) {
+    if (nextState.showDelDialog !== this.state.showDelDialog ||
+    nextState.isEnterLoading !== this.state.isEnterLoading) {
       return true;
     }
     return false;
@@ -97,10 +109,12 @@ class ScmlView extends React.Component {
   render() {
     const { data } = this.props;
     let loading = undefined;
-    let pageWrapper = undefined;
     if (data.asyncStatus && data.asyncStatus.details && data.asyncStatus.details.isFetching) {
       loading = <Toast type="loading" title="加载数据" isBlock />;
-    } else if (data.details) {
+    }
+
+    let pageWrapper = undefined;
+    if (data.details && !this.state.isEnterLoading) {
       pageWrapper = <div>
         <PageHeader title={config.moduleName} subTitle="详情">
           <ButtonToolbar>
