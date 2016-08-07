@@ -24,7 +24,7 @@
 
 @media (min-width: 768px) {
   .toast {
-    top: 50px;
+    top: 30%;
     max-width: 35%;
     padding: 7px 20px;
   }
