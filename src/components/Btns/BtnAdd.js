@@ -1,6 +1,6 @@
 import React from 'react';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
-import Button from 'react-bootstrap/lib/Button';
+import Tap from '../hahoo/Tap';
 
 class BtnAdd extends React.Component {
   static defaultProps = {
@@ -8,17 +8,20 @@ class BtnAdd extends React.Component {
   }
 
   static propTypes = {
-    dropdown: React.PropTypes.bool
+    dropdown: React.PropTypes.bool,
+    onItemClick: React.PropTypes.func
   }
 
   render() {
-    const { dropdown, ...rest } = this.props;
+    const { dropdown, onItemClick, ...rest } = this.props;
 
     /* eslint no-else-return: 0 */
     if (dropdown) {
       return <MenuItem {...rest}><i className="fa fa-plus fa-fw" /> 添加</MenuItem>;
     } else {
-      return <Button {...rest}><i className="fa fa-plus fa-fw" /> 添加</Button>;
+      return (<Tap onTap={onItemClick} className="btn btn-default" {...rest}>
+        <i className="fa fa-plus fa-fw" /> 添加
+      </Tap>);
     }
   }
 }
