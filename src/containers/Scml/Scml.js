@@ -18,16 +18,19 @@ import {
   BtnRefresh,
   Pagination,
   Dialog,
-  Toast
+  Toast,
+  ShowError
 } from '../../components';
 
 import {
   getList,
   setListStatus,
-  switchFlag,
-  delItem,
+  publish,
+  del,
   order,
-  getScrollPosition
+  getScrollPosition,
+  cleanError,
+  cleanLoading
 } from '../../actions/scml';
 
 class Scml extends React.Component {
@@ -44,44 +47,47 @@ class Scml extends React.Component {
   constructor(props) {
     super(props);
     this.pageSelect = this.pageSelect.bind(this);
-    this.handleRefresh = this.handleRefresh.bind(this);
-    this.handleDel = this.handleDel.bind(this);
     this.handleDelConfirm = this.handleDelConfirm.bind(this);
-    this.handlePub = this.handlePub.bind(this);
-    this.handleUnPub = this.handleUnPub.bind(this);
-    this.handleMoveUp = this.handleMoveUp.bind(this);
-    this.handleMoveDown = this.handleMoveDown.bind(this);
-    this.handleMoveId = this.handleMoveId.bind(this);
-    this.handleMoveIdConfirm = this.handleMoveIdConfirm.bind(this);
-    this.handleMoveTo = this.handleMoveTo.bind(this);
-    this.orderIdChange = this.orderIdChange.bind(this);
+    this.changeOrderIdConfirm = this.changeOrderIdConfirm.bind(this);
+    this.refresh = this.refresh.bind(this);
   }
 
   state = {
     pageSize: 10,
-    showDelDialog: false,
-    showMoveIdDialog: false,
-    delId: undefined,
-    moveId: undefined,
-    orderId: undefined,
-    newOrderId: undefined,
-    isLoading: false
+    isLoading: false,
+    del: {
+      isShowDialog: false,
+      id: undefined,
+    },
+    order: {
+      isShowDialog: false,
+      id: undefined,
+      orderId: undefined,
+      newOrderId: undefined,
+    }
   }
 
   componentWillMount() {
     this.setState({ isLoading: true });
+    const { data, dispatch } = this.props;
+    if (data.error) {
+      dispatch(cleanError());
+    }
+    if (data.isLoading || data.isUpdating) {
+      dispatch(cleanLoading());
+    }
   }
 
   componentDidMount() {
     const page = filterPage(this.props.params.page);
     if (page === -1) {
-      this.context.router.push('/notfound');
+      this.context.router.replace('/notfound');
     } else {
       const { data, dispatch } = this.props;
       if (page !== data.page || data.items.length === 0 ||
-        (data.listUpdateTime && ((Date.now() - data.listUpdateTime) > 5 * 60 * 1000))) {
+        (data.listUpdateTime && ((Date.now() - data.listUpdateTime) > config.listRefreshTime))) {
         dispatch(setListStatus('initPage'));
-        dispatch(getList(page, this.state.pageSize));
+        dispatch(getList(config.api.resource, page, this.state.pageSize));
       }
     }
 
@@ -99,15 +105,14 @@ class Scml extends React.Component {
       return false;
     }
     if (page !== data.page || data.items.length === 0 ||
-      (data.listUpdateTime && ((Date.now() - data.listUpdateTime) > 5 * 60 * 1000))) {
+      (data.listUpdateTime && ((Date.now() - data.listUpdateTime) > config.listRefreshTime))) {
       return true;
     }
     if (data.shouldUpdate || nextProps.data.shouldUpdate) {
       return true;
     }
-    if (nextState.showDelDialog !== this.state.showDelDialog ||
-      nextState.showMoveIdDialog !== this.state.showMoveIdDialog ||
-      nextState.newOrderId !== this.state.newOrderId ||
+    if (nextState.del !== this.state.del ||
+      nextState.order !== this.state.order ||
       nextState.isLoading !== this.state.isLoading) {
       return true;
     }
@@ -116,16 +121,14 @@ class Scml extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     const { data, dispatch } = this.props;
-    if ((data.asyncStatus && data.asyncStatus.list && !data.asyncStatus.list.isFetching) &&
-    (prevProps.data.asyncStatus && prevProps.data.asyncStatus.list &&
-      prevProps.data.asyncStatus.list.isFetching)) {
+    if (!data.isLoading && prevProps.data.isLoading && !data.error) {
       switch (data.listStatus) {
         case 'initPage':
           window.scrollTo(0, this.props.data.scrollY);
           break;
         case 'switchingPage':
           window.scrollTo(0, 0);
-          this.context.router.push(`/scml/list/${data.page}`);
+          this.context.router.push(`/${config.module}/list/${data.page}`);
           break;
         default:
       }
@@ -134,11 +137,12 @@ class Scml extends React.Component {
       // 直接从浏览器输入页码
       const page = filterPage(this.props.params.page);
       if (page === -1) {
-        this.context.router.push('/notfound');
+        this.context.router.replace('/notfound');
       } else {
-        if (!(data.asyncStatus && data.asyncStatus.list && data.asyncStatus.list.isFetching) &&
-        page !== data.page) {
-          dispatch(getList(page, this.state.pageSize));
+        if (!data.isLoading && page !== data.page && !data.error && data.listStatus === 'ok') {
+          // console.log(page);
+          console.log(this.props.data.page);
+          dispatch(getList(config.api.resource, page, this.state.pageSize));
         }
       }
 
@@ -149,109 +153,99 @@ class Scml extends React.Component {
   }
 
   componentWillUnmount() {
-    const { dispatch } = this.props;
-    dispatch(getScrollPosition(window.scrollY));
+    this.props.dispatch(getScrollPosition(window.scrollY));
   }
 
   pageSelect(page) {
     const { dispatch } = this.props;
     dispatch(setListStatus('switchingPage'));
-    dispatch(getList(page, this.state.pageSize));
+    dispatch(getList(config.api.resource, page, this.state.pageSize));
   }
 
-  handleRefresh() {
-    const { dispatch, params } = this.props;
-    dispatch(getList(params.page, this.state.pageSize));
-  }
-
-  handleDel(id) {
-    this.setState({ showDelDialog: true, delId: id });
+  refresh() {
+    const { dispatch, data } = this.props;
+    dispatch(getList(config.api.resource, data.page, this.state.pageSize));
   }
 
   handleDelConfirm(code) {
     if (code === 1) {
-      this.props.dispatch(delItem(this.state.delId));
+      this.props.dispatch(del(config.api.resource, this.state.del.id));
     }
-    this.setState({ showDelDialog: false, delId: undefined });
+    this.setState({ del: { isShowDialog: false, id: undefined } });
   }
 
-  handlePub(id) {
-    this.props.dispatch(switchFlag(id, 'isPublish', 1));
-  }
-
-  handleUnPub(id) {
-    this.props.dispatch(switchFlag(id, 'isPublish', 0));
-  }
-
-  handleMoveUp(id) {
-    const { dispatch, params } = this.props;
-    dispatch(order(id, 'up', params.page, this.state.pageSize));
-  }
-
-  handleMoveDown(id) {
-    const { dispatch, params } = this.props;
-    dispatch(order(id, 'down', params.page, this.state.pageSize));
-  }
-
-  handleMoveId(id, orderId) {
-    this.setState({ showMoveIdDialog: true, moveId: id, orderId, newOrderId: orderId });
-  }
-
-  orderIdChange(e) {
-    this.setState({ newOrderId: e.target.value });
-  }
-
-  handleMoveIdConfirm(code) {
+  changeOrderIdConfirm(code) {
     if (code === 1) {
-      if (isDecimal(`${this.state.newOrderId}`)) {
-        const newOrderId = toFloat(`${this.state.newOrderId}`);
-        if (newOrderId && newOrderId > 0 && newOrderId !== toFloat(`${this.state.orderId}`)) {
+      if (isDecimal(`${this.state.order.newOrderId}`)) {
+        const newOrderId = toFloat(`${this.state.order.newOrderId}`);
+        if (newOrderId && newOrderId > 0 && newOrderId !== toFloat(`${this.state.order.orderId}`)) {
           const { dispatch, params } = this.props;
-          const { moveId, pageSize } = this.state;
-          dispatch(order(moveId, 'changeOrderId', params.page, pageSize, newOrderId));
+          dispatch(order(config.api.resource, this.state.order.id,
+            'changeOrderId', params.page, this.state.pageSize, newOrderId));
         }
       }
     }
-    this.setState({ showMoveIdDialog: false, moveId: undefined,
-      orderId: undefined, newOrderId: undefined });
-  }
-
-  handleMoveTo(id, orderId) {
-    const { dispatch, params } = this.props;
-    dispatch(order(id, 'changeOrderId', params.page, this.state.pageSize, orderId));
+    this.setState({
+      order: { isShowDialog: false, id: undefined, orderId: undefined, newOrderId: undefined }
+    });
   }
 
   render() {
-    const { data } = this.props;
+    const { data, dispatch, params } = this.props;
+    const { page } = params;
+    const { pageSize } = this.state;
 
     let loading = undefined;
-    if ((data.asyncStatus && data.asyncStatus.list && data.asyncStatus.list.isFetching) ||
-    this.state.isLoading) {
+    if (data.isLoading || this.state.isLoading) {
       loading = <Toast type="loading" title="加载数据" isBlock />;
     }
-    if (data.asyncStatus && data.asyncStatus.switchFlag && data.asyncStatus.switchFlag.isFetching ||
-      data.asyncStatus && data.asyncStatus.delItem && data.asyncStatus.delItem.isFetching ||
-      data.asyncStatus && data.asyncStatus.order && data.asyncStatus.order.isFetching) {
+    if (data.isUpdating) {
       loading = <Toast type="loading" title="正在更新" isBlock />;
     }
 
+    let error = undefined;
+    if (!loading && data.error) {
+      error = <ShowError error={data.error} key={Math.random()} onClose={() => dispatch(cleanError())} />;
+    }
+
     let pageWrapper = undefined;
+    let dialog = undefined;
     if (!this.state.isLoading && data.items && data.items.length > 0) {
+      if (this.state.del.isShowDialog) {
+        dialog = <Dialog title="确认" info="您确定删除吗？" type="confirm" onClick={this.handleDelConfirm} />;
+      }
+      if (this.state.order.isShowDialog) {
+        dialog = <Dialog
+          title="修改排序码"
+          info={<FormControl
+            type="number"
+            value={this.state.order.newOrderId}
+            onChange={(e) => this.setState({
+              order: Object.assign({}, this.state.order, { newOrderId: e.target.value })
+            })}
+          />}
+          type="confirm"
+          onClick={this.changeOrderIdConfirm}
+        />;
+      }
+
       const rows = data.items.map((item) => (<ListRow
         key={item.id}
         item={item}
-        onDelete={this.handleDel}
-        onPublish={this.handlePub}
-        onUnPublish={this.handleUnPub}
-        onMoveUp={this.handleMoveUp}
-        onMoveDown={this.handleMoveDown}
-        onMoveTo={this.handleMoveTo}
-        onPopOrderIdPannel={this.handleMoveId}
+        onDelete={(id) => this.setState({ del: { isShowDialog: true, id } })}
+        onPublish={(id) => dispatch(publish(config.api.resource, id, true))}
+        onUnPublish={(id) => dispatch(publish(config.api.resource, id, false))}
+        onMoveUp={(id) => dispatch(order(config.api.resource, id, 'up', page, pageSize))}
+        onMoveDown={(id) => dispatch(order(config.api.resource, id, 'down', page, pageSize))}
+        onMoveTo={(id, orderId) => dispatch(order(config.api.resource, id, 'changeOrderId', page, pageSize, orderId))}
+        onPopOrderIdPannel={(id, orderId) => this.setState({
+          order: { isShowDialog: true, id, orderId, newOrderId: orderId }
+        })}
       />));
 
       const pagination = <Pagination
         page={data.page}
-        pageSize={this.state.pageSize}
+        pageSize={pageSize}
         recordCount={data.totalCount}
         pageSelect={this.pageSelect}
       />;
@@ -259,8 +253,8 @@ class Scml extends React.Component {
       pageWrapper = <div>
         <PageHeader title={config.moduleName} subTitle="列表">
           <ButtonToolbar>
-            <BtnAdd onItemClick={() => this.context.router.push('/scml/add')} />
-            <BtnRefresh onItemClick={this.handleRefresh} />
+            <BtnAdd onItemClick={() => this.context.router.push(`/${config.module}/add`)} />
+            <BtnRefresh onItemClick={this.refresh} />
           </ButtonToolbar>
         </PageHeader>
 
@@ -275,23 +269,10 @@ class Scml extends React.Component {
     return (
       <div>
         <Helmet title={config.pageTitle} />
-        <Navbar activeKey="scml" />
+        <Navbar activeKey={config.module} />
 
-        {this.state.showDelDialog ?
-          <Dialog title="确认" info="您确定删除吗？" type="confirm" onClick={this.handleDelConfirm} /> : ''}
-
-        {this.state.showMoveIdDialog ?
-          <Dialog
-            title="修改排序码"
-            info={<FormControl
-              type="number"
-              value={this.state.newOrderId}
-              onChange={this.orderIdChange}
-            />}
-            type="confirm"
-            onClick={this.handleMoveIdConfirm}
-          /> : ''}
-
+        {dialog && dialog}
+        {error && error}
         {loading && loading}
         <PageWrapper>
           {pageWrapper}

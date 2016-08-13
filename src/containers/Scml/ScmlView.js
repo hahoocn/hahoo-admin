@@ -15,13 +15,14 @@ import {
   BtnEdit,
   BtnDel,
   Toast,
-  Dialog
+  Dialog,
+  ShowError
 } from '../../components';
 import { LinkContainer } from 'react-router-bootstrap';
 import Col from 'react-bootstrap/lib/Col';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import { filterId } from '../../utils/filter';
-import { getDetails, delItem } from '../../actions/scml';
+import { getDetails, del, cleanError, cleanLoading } from '../../actions/scml';
 
 class ScmlView extends React.Component {
   static propTypes = {
@@ -43,21 +44,30 @@ class ScmlView extends React.Component {
   state = {
     isEnterLoading: false,
     isDeling: false,
-    showDelDialog: false,
-    delId: undefined
+    del: {
+      isShowDialog: false,
+      id: undefined,
+    },
   }
 
   componentWillMount() {
+    const { data, dispatch } = this.props;
     const id = filterId(this.props.params.id);
     if (id === -1) {
-      this.context.router.push('/notfound');
+      this.context.router.replace('/notfound');
     } else {
-      const { data } = this.props;
       if (!data.details || parseInt(data.details.id, 10) !== id ||
-        ((Date.now() - data.details.receivedAt) > 2 * 60 * 1000)) {
-        this.props.dispatch(getDetails(id));
+        ((Date.now() - data.details.receivedAt) > config.detailsRefreshTime)) {
+        dispatch(getDetails(config.api.resource, id));
         this.setState({ isEnterLoading: true });
       }
+    }
+
+    if (data.error) {
+      dispatch(cleanError());
+    }
+    if (data.isLoading || data.isUpdating) {
+      dispatch(cleanLoading());
     }
   }
 
@@ -71,9 +81,9 @@ class ScmlView extends React.Component {
     const { data } = this.props;
     if (!nextProps.data.shouldUpdate && data.shouldUpdate && this.state.isDeling) {
       if (data.page > 0) {
-        this.context.router.replace(`/scml/list/${data.page}`);
+        this.context.router.replace(`/${config.module}/list/${data.page}`);
       } else {
-        this.context.router.replace('/scml/list');
+        this.context.router.replace(`/${config.module}/list`);
       }
     }
     if (!nextProps.data.shouldUpdate && data.shouldUpdate && this.state.isEnterLoading) {
@@ -86,7 +96,7 @@ class ScmlView extends React.Component {
     if (nextProps.data.shouldUpdate) {
       return true;
     }
-    if (nextState.showDelDialog !== this.state.showDelDialog ||
+    if (nextState.del !== this.state.del ||
     nextState.isEnterLoading !== this.state.isEnterLoading) {
       return true;
     }
@@ -94,32 +104,44 @@ class ScmlView extends React.Component {
   }
 
   handleDel(id) {
-    this.setState({ showDelDialog: true, delId: id });
+    this.setState({ del: { isShowDialog: true, id } });
   }
 
   handleDelConfirm(code) {
     if (code === 1) {
-      this.props.dispatch(delItem(this.state.delId));
-      this.setState({ showDelDialog: false, delId: undefined, isDeling: true });
+      this.props.dispatch(del(config.api.resource, this.state.del.id));
+      this.setState({ del: { isShowDialog: false, id: undefined }, isDeling: true });
     } else {
-      this.setState({ showDelDialog: false, delId: undefined });
+      this.setState({ del: { isShowDialog: false, id: undefined } });
     }
   }
 
   render() {
-    const { data } = this.props;
+    const { data, dispatch } = this.props;
     let loading = undefined;
-    if (data.asyncStatus && data.asyncStatus.details && data.asyncStatus.details.isFetching) {
+    if (data.isLoading) {
       loading = <Toast type="loading" title="加载数据" isBlock />;
     }
 
+    let error = undefined;
+    if (!loading && data.error) {
+      error = <ShowError
+        error={data.error} key={Math.random()}
+        onClose={() => dispatch(cleanError())}
+      />;
+    }
+
     let pageWrapper = undefined;
+    let dialog = undefined;
     if (data.details && !this.state.isEnterLoading) {
+      if (this.state.del.isShowDialog) {
+        dialog = <Dialog title="确认" info="您确定删除吗？" type="confirm" onClick={this.handleDelConfirm} />;
+      }
       pageWrapper = <div>
         <PageHeader title={config.moduleName} subTitle="详情">
           <ButtonToolbar>
             <BtnBack />
-            <LinkContainer to={`/scml/edit/${data.details.id}`}>
+            <LinkContainer to={`/${config.module}/edit/${data.details.id}`}>
               <BtnEdit />
             </LinkContainer>
             <BtnDel onItemClick={this.handleDel} itemId={parseInt(data.details.id, 10)} />
@@ -177,16 +199,10 @@ class ScmlView extends React.Component {
     return (
       <div>
         <Helmet title={config.pageTitle} />
-        <Navbar activeKey="scml" />
+        <Navbar activeKey={config.module} />
 
-        {this.state.showDelDialog ?
-          <Dialog
-            title="确认"
-            info="您确定删除吗？"
-            type="confirm"
-            onClick={this.handleDelConfirm}
-          /> : ''}
-
+        {dialog && dialog}
+        {error && error}
         {loading && loading}
         <PageWrapper>
           {pageWrapper && pageWrapper}

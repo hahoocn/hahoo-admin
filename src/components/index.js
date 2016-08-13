@@ -10,6 +10,7 @@ export ListColTime from './ListCol/ListColTime/ListColTime';
 export ListColOrder from './ListCol/ListColOrder/ListColOrder';
 export ListColOptBtn from './ListCol/ListColOptBtn/ListColOptBtn';
 export Pagination from './Pagination/Pagination';
+export ShowError from './ShowError/ShowError';
 
 export LabelPublish from './Labels/LabelPublish';
 export LabelUnPublish from './Labels/LabelUnPublish';

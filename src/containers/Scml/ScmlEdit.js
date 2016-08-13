@@ -10,11 +10,12 @@ import {
   BtnCancel,
   BtnSubmit,
   Toggle,
-  ToastAlert,
-  Toast
+  Toast,
+  ShowError
 } from '../../components';
 
-import { edit, cleanAsyncStatus, getEditDetails } from '../../actions/scml';
+import { add, update, getEditDetails, cleanError, cleanLoading, setError } from '../../actions/scml';
+import { responseError } from '../../api/utils';
 
 import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
@@ -37,18 +38,12 @@ class ScmlEdit extends React.Component {
 
   constructor(props) {
     super(props);
-    this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleInfoChange = this.handleInfoChange.bind(this);
-    this.handlePubSwitch = this.handlePubSwitch.bind(this);
-    this.cleanErr = this.cleanErr.bind(this);
     this.handleSuccess = this.handleSuccess.bind(this);
   }
 
   state = {
     id: 0,
-    err: undefined,
-    isSubmiting: false,
     isSuccess: false,
     formTitle: '',
     formInfo: '',
@@ -57,14 +52,20 @@ class ScmlEdit extends React.Component {
   }
 
   componentWillMount() {
+    const { data, dispatch } = this.props;
     const id = parseInt(this.props.params.id, 10);
     if (id) {
       this.setState({ id });
     }
-    this.props.dispatch(cleanAsyncStatus('edit'));
+    if (data.error) {
+      dispatch(cleanError());
+    }
+    if (data.isLoading || data.isUpdating) {
+      dispatch(cleanLoading());
+    }
 
     if (id > 0) {
-      const { details } = this.props.data;
+      const { details } = data;
       if (details && details.id === id) {
         this.setState({
           formTitle: details.title,
@@ -73,7 +74,7 @@ class ScmlEdit extends React.Component {
           formOrderId: details.orderId
         });
       } else {
-        this.props.dispatch(getEditDetails(id));
+        dispatch(getEditDetails(config.api.resource, id));
       }
     }
   }
@@ -84,16 +85,10 @@ class ScmlEdit extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     const { data } = this.props;
-    if (data.asyncStatus && data.asyncStatus.edit &&
-      nextProps.data.asyncStatus && nextProps.data.asyncStatus.edit) {
-      if (data.asyncStatus.edit.isFetching && !nextProps.data.asyncStatus.edit.isFetching &&
-      !nextProps.data.asyncStatus.edit.err) {
-        this.setState({ isSuccess: true });
-      }
+    if (data.isUpdating && !nextProps.data.isUpdating && !nextProps.data.error) {
+      this.setState({ isSuccess: true });
     }
-    if (data.asyncStatus && data.asyncStatus.editdetails &&
-      data.asyncStatus.editdetails.isFetching &&
-      !nextProps.data.asyncStatus.editdetails.isFetching) {
+    if (data.isLoading && !nextProps.data.isLoading) {
       const { details } = nextProps.data;
       if (details && details.id === this.state.id) {
         this.setState({
@@ -106,51 +101,32 @@ class ScmlEdit extends React.Component {
     }
   }
 
-  handleTitleChange(event) {
-    this.setState({ formTitle: event.target.value, err: undefined });
-  }
-
-  handleInfoChange(event) {
-    this.setState({ formInfo: event.target.value, err: undefined });
-  }
-
-  handlePubSwitch() {
-    this.setState({ formIsPublish: !this.state.formIsPublish, err: undefined });
-  }
-
-  cleanErr() {
-    this.setState({ err: undefined });
-  }
-
   handleSubmit(event) {
     event.preventDefault();
+    const { dispatch } = this.props;
     const { id, formTitle, formInfo, formIsPublish } = this.state;
     if (formTitle.length === 0) {
-      this.setState({ err: '请输入标题' });
+      dispatch(setError(responseError('请输入标题')));
     } else if (this.state.id > 0) {
       if (this.state.formOrderId <= 0) {
-        this.setState({ err: '排序Id请输入大于0的数字' });
+        dispatch(setError(responseError('排序Id请输入大于0的数字')));
       } else if (!isFloat(`${this.state.formOrderId}`)) {
-        this.setState({ err: '排序Id请输入数字' });
+        dispatch(setError(responseError('排序Id请输入数字')));
       } else {
         const orderId = toFloat(`${this.state.formOrderId}`);
-        this.props.dispatch(edit({
-          id,
+        dispatch(update(config.api.resource, id, {
           title: formTitle,
           info: formInfo,
           isPublish: formIsPublish,
           orderId
         }));
-        this.setState({ isSubmiting: true });
       }
     } else {
-      this.props.dispatch(edit({
-        id,
+      dispatch(add(config.api.resource, {
         title: formTitle,
         info: formInfo,
         isPublish: formIsPublish
       }));
-      this.setState({ isSubmiting: true });
     }
   }
 
@@ -158,13 +134,13 @@ class ScmlEdit extends React.Component {
     if (this.state.id > 0) {
       this.context.router.goBack();
     } else {
-      this.context.router.replace('/scml/list');
+      this.context.router.replace(`/${config.module}/list`);
     }
   }
 
   render() {
     const { router } = this.context;
-    const { data } = this.props;
+    const { data, dispatch } = this.props;
     const id = this.state.id;
     let subTitle = '添加';
     if (id > 0) {
@@ -172,13 +148,12 @@ class ScmlEdit extends React.Component {
     }
 
     let loading = undefined;
-    if ((data.asyncStatus && data.asyncStatus.editdetails &&
-      data.asyncStatus.editdetails.isFetching)) {
+    if (data.isLoading) {
       loading = <Toast type="loading" title="加载数据" isBlock />;
     }
 
     let submiting = undefined;
-    if (data.asyncStatus && data.asyncStatus.edit && data.asyncStatus.edit.isFetching) {
+    if (data.isUpdating) {
       submiting = <Toast type="loading" title="正在提交" isBlock />;
     }
 
@@ -187,9 +162,13 @@ class ScmlEdit extends React.Component {
       success = <Toast type="success" title="操作成功" onClose={this.handleSuccess} isBlock />;
     }
 
+    let error = undefined;
+    if (!loading && data.error) {
+      error = <ShowError error={data.error} key={Math.random()} onClose={() => dispatch(cleanError())} />;
+    }
+
     let pageWrapper = undefined;
-    if (!data.asyncStatus || !data.asyncStatus.editdetails ||
-      !data.asyncStatus.editdetails.isFetching) {
+    if (!data.isLoading) {
       pageWrapper = <div>
         <PageHeader title={config.moduleName} subTitle={subTitle} />
 
@@ -202,7 +181,7 @@ class ScmlEdit extends React.Component {
               <FormControl
                 type="text"
                 value={this.state.formTitle}
-                onChange={this.handleTitleChange}
+                onChange={(e) => this.setState({ formTitle: e.target.value, err: undefined })}
               />
             </Col>
           </FormGroup>
@@ -216,7 +195,7 @@ class ScmlEdit extends React.Component {
                 componentClass="textarea"
                 rows="6"
                 value={this.state.formInfo}
-                onChange={this.handleInfoChange}
+                onChange={(e) => this.setState({ formInfo: e.target.value, err: undefined })}
               />
             </Col>
           </FormGroup>
@@ -239,7 +218,10 @@ class ScmlEdit extends React.Component {
               发布状态
             </Col>
             <Col sm={2}>
-              <Toggle checked={this.state.formIsPublish} onChange={this.handlePubSwitch} />
+              <Toggle
+                checked={this.state.formIsPublish}
+                onChange={() => this.setState({ formIsPublish: !this.state.formIsPublish, err: undefined })}
+              />
             </Col>
           </FormGroup>
 
@@ -262,14 +244,12 @@ class ScmlEdit extends React.Component {
     return (
       <div>
         <Helmet title={config.pageTitle} />
-        <Navbar activeKey="scml" />
-
-        {this.state.err ?
-          <ToastAlert info={this.state.err} key={Math.random()} onClose={this.cleanErr} /> : null}
+        <Navbar activeKey={config.module} />
 
         {loading && loading}
         {submiting && submiting}
         {success && success}
+        {error && error}
         <PageWrapper>
           {pageWrapper}
         </PageWrapper>
