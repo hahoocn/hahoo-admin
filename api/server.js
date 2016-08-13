@@ -9,7 +9,7 @@ const app = express();
 
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS, PATCH');
   res.header('Access-Control-Allow-Headers', 'X-Requested-With, Accept, Origin, Content-Type');
   res.header('Content-Type', 'application/json;charset=utf-8');
   res.header('X-Powered-By', 'Hahoo');
@@ -18,28 +18,32 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
-app.post('/scml/list', (req, res) => {
+app.get('/scmls', (req, res) => {
   setTimeout(() => {
-    res.send(data);
+    res.json(data);
   }, 500);
 });
 
-app.post('/scml/switchflag', (req, res) => {
-  res.send({ response: 'success' });
+app.put('/scmls/:id/publication', (req, res) => {
+  res.sendStatus(204);
 });
 
-app.post('/scml/delete', (req, res) => {
-  res.send({ response: 'success' });
+app.delete('/scmls/:id/publication', (req, res) => {
+  res.sendStatus(204);
 });
 
-app.post('/scml/order', (req, res) => {
-  res.send({ response: 'success' });
+app.delete('/scmls/:id', (req, res) => {
+  res.sendStatus(204);
 });
 
-app.get('/scml/details', (req, res) => {
+app.put('/scmls/:id/order', (req, res) => {
+  res.sendStatus(204);
+});
+
+app.get('/scmls/:id', (req, res) => {
   setTimeout(() => {
-    res.send({
-      id: parseInt(req.query.id, 10),
+    res.json({
+      id: parseInt(req.params.id, 10),
       title: '这是内容标题的测试，标题长一点会换行，那么就测试看看标题长长的样子',
       updateTime: '2016-10-23',
       orderId: 99,
@@ -49,15 +53,27 @@ app.get('/scml/details', (req, res) => {
   }, 500);
 });
 
-app.post('/scml/add', (req, res) => {
-  setTimeout(() => {
-    res.send({ response: 'success' });
-  }, 500);
+app.post('/scmls', (req, res) => {
+  res.status(201).json({
+    id: 111,
+    title: req.body.title,
+    updateTime: Date.now(),
+    orderId: 120,
+    isPublish: req.body.isPublish,
+    info: req.body.info
+  });
 });
 
-app.post('/scml/update', (req, res) => {
+app.put('/scmls/:id', (req, res) => {
   setTimeout(() => {
-    res.send({ response: 'success' });
+    res.json({
+      id: parseInt(req.params.id, 10),
+      title: req.body.title,
+      updateTime: Date.now(),
+      orderId: req.body.orderId,
+      isPublish: req.body.isPublish,
+      info: req.body.info
+    });
   }, 500);
 });
 
