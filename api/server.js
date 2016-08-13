@@ -71,7 +71,7 @@ app.put('/scmls/:id', (req, res) => {
       title: req.body.title,
       updateTime: Date.now(),
       orderId: req.body.orderId,
-      isPublish: req.body.isPublish,
+      isPublish: req.body.isPublish ? 1 : 0,
       info: req.body.info
     });
   }, 500);
