@@ -24,6 +24,7 @@
         "no-alert": 0,
         "global-require": 0,
         "react/wrap-multilines": 0,
+        "max-len": [2, 120]
     },
     "globals": {
       "window": true
