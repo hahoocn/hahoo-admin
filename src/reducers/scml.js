@@ -102,6 +102,7 @@ const scml = createReducer({
         return {
           isUpdating: false,
           error: undefined,
+          totalCount: state.totalCount - 1,
           details: state.details && state.details.id && state.details.id === action.res.req.id ?
             undefined : state.details,
           items: state.items.filter(item => item.id !== action.res.req.id)
