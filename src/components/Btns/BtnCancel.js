@@ -1,5 +1,6 @@
 import React from 'react';
 import Tap from '../hahoo/Tap';
+import styles from './Btn.css';
 
 class BtnCancel extends React.Component {
   static defaultProps = {
@@ -14,7 +15,7 @@ class BtnCancel extends React.Component {
 
   render() {
     const { title, onItemClick, className, ...rest } = this.props;
-    let style = 'btn btn-info btn-block';
+    let style = `btn btn-default btn-block ${styles.mainBtn}`;
     if (className) {
       style += ` ${className}`;
     }

@@ -231,7 +231,6 @@ class ScmlEdit extends React.Component {
             </Col>
             <Col sm={2}>
               <BtnCancel
-                className="hidden-xs hidden-sm"
                 onItemClick={() => { router.goBack(); }}
               />
             </Col>
