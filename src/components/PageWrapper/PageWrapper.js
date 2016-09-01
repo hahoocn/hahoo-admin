@@ -12,6 +12,7 @@ class PageWrapper extends React.Component {
     return (
       <div className={styles.pagewrapper}>
         {this.props.children}
+        <div className={styles.foot} />
       </div>
 		);
   }

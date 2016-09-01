@@ -7,7 +7,7 @@ import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
-
+import logoIcon from '../../assets/images/logo.svg';
 import SideNavDropdown from '../SideNavDropdown/SideNavDropdown';
 import './Navbar.css';
 
@@ -43,6 +43,7 @@ class TopNavbar extends React.Component {
       >
         <Navbar.Header>
           <Navbar.Brand>
+            <span><img src={logoIcon} alt="logo" width="25" height="25" /></span>
             <IndexLink to="/" onClick={this.onNavItemClick}>
               {config.app.title}
             </IndexLink>
@@ -67,17 +68,23 @@ class TopNavbar extends React.Component {
               </LinkContainer>
 
               <SideNavDropdown
+                isCollapsed={activeKey !== 'mcml' && activeKey !== 'cate'}
+                isActive={activeKey === 'mcml' || activeKey === 'cate'}
                 title={<span><i className="fa fa-cubes fa-fw" /> 多分类多条目</span>}
               >
 
-                <LinkContainer to="/mcml">
-                  <NavItem eventKey={3} onClick={this.onNavItemClick}>
+                <LinkContainer to="/mcml/list">
+                  <NavItem eventKey={3} onClick={this.onNavItemClick} className={activeKey === 'mcml' ? 'active' : ''}>
                     <i className="fa fa-file-text-o fa-fw" /> 内容列表
                   </NavItem>
                 </LinkContainer>
 
-                <LinkContainer to="/mcml/cate">
-                  <NavItem eventKey={4} onClick={this.onNavItemClick}>
+                <LinkContainer to="/cate/list">
+                  <NavItem
+                    eventKey={4}
+                    onClick={this.onNavItemClick}
+                    className={activeKey === 'cate' ? 'active' : ''}
+                  >
                     <i className="fa fa-th-list fa-fw" /> 分类管理
                   </NavItem>
                 </LinkContainer>
@@ -86,12 +93,12 @@ class TopNavbar extends React.Component {
 
 
               <SideNavDropdown title={<span><i className="fa fa-sitemap fa-fw" /> 多级下拉</span>}>
-                <LinkContainer to="/">
+                <LinkContainer to="/test">
                   <NavItem eventKey={5} onClick={this.onNavItemClick}>
                     二级条目
                   </NavItem>
                 </LinkContainer>
-                <LinkContainer to="/">
+                <LinkContainer to="/test">
                   <NavItem eventKey={6} onClick={this.onNavItemClick}>
                     二级条目
                   </NavItem>
@@ -101,12 +108,12 @@ class TopNavbar extends React.Component {
                   isThirdLevel
                   title="三级"
                 >
-                  <LinkContainer to="/">
+                  <LinkContainer to="/test">
                     <NavItem eventKey={7} onClick={this.onNavItemClick}>
                       三级条目
                     </NavItem>
                   </LinkContainer>
-                  <LinkContainer to="/">
+                  <LinkContainer to="/test">
                     <NavItem eventKey={8} onClick={this.onNavItemClick}>
                       三级条目
                     </NavItem>
@@ -129,6 +136,7 @@ class TopNavbar extends React.Component {
               eventKey={3}
               title={<i className="fa fa-user fa-fw"> 帐户 </i>}
               id="nav-dropdown"
+              className="topbtn"
             >
               <MenuItem eventKey={3.1}><i className="fa fa-sign-out fa-fw" /> 退出</MenuItem>
             </NavDropdown>

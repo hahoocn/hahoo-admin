@@ -12,7 +12,7 @@ class HahooPagination extends React.Component {
   }
 
   static defaultProps = {
-    pageSize: 20
+    pageSize: 10
   }
 
   constructor(props) {

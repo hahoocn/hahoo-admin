@@ -1,5 +1,11 @@
+@media (min-width: 768px) {
+  .status {
+    text-align: center;
+  }
+}
+
 @media (max-width: 768px) {
   .status {
-    margin-top: 20px;
+    margin-top: 15px;
   }
 }

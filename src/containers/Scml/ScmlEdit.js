@@ -9,9 +9,9 @@ import {
   FormSubmitBtn,
   BtnCancel,
   BtnSubmit,
-  Toggle,
   Toast,
-  ShowError
+  ShowError,
+  FormToggle
 } from '../../components';
 
 import { add, update, getEditDetails, cleanError, cleanLoading, setError } from '../../actions/scml';
@@ -22,6 +22,7 @@ import FormGroup from 'react-bootstrap/lib/FormGroup';
 import Col from 'react-bootstrap/lib/Col';
 import ControlLabel from 'react-bootstrap/lib/ControlLabel';
 import FormControl from 'react-bootstrap/lib/FormControl';
+import Row from 'react-bootstrap/lib/Row';
 import isFloat from 'validator/lib/isFloat';
 import toFloat from 'validator/lib/toFloat';
 
@@ -172,68 +173,55 @@ class ScmlEdit extends React.Component {
       pageWrapper = <div>
         <PageHeader title={config.moduleName} subTitle={subTitle} />
 
-        <Form horizontal onSubmit={this.handleSubmit}>
+        <Form onSubmit={this.handleSubmit}>
           <FormGroup controlId="title">
-            <Col componentClass={ControlLabel} sm={2}>
-              标题
-            </Col>
-            <Col sm={4}>
-              <FormControl
-                type="text"
-                value={this.state.formTitle}
-                onChange={(e) => this.setState({ formTitle: e.target.value, err: undefined })}
-              />
-            </Col>
+            <ControlLabel>标题</ControlLabel>
+            <FormControl
+              type="text"
+              value={this.state.formTitle}
+              placeholder="请输入标题"
+              onChange={(e) => this.setState({ formTitle: e.target.value })}
+            />
           </FormGroup>
 
           <FormGroup controlId="orderid">
-            <Col componentClass={ControlLabel} sm={2}>
-              简介
-            </Col>
-            <Col sm={6}>
-              <FormControl
-                componentClass="textarea"
-                rows="6"
-                value={this.state.formInfo}
-                onChange={(e) => this.setState({ formInfo: e.target.value, err: undefined })}
-              />
-            </Col>
+            <ControlLabel>简介</ControlLabel>
+            <FormControl
+              componentClass="textarea"
+              rows="6"
+              value={this.state.formInfo}
+              placeholder="请输入简介"
+              onChange={(e) => this.setState({ formInfo: e.target.value })}
+            />
           </FormGroup>
 
           {id > 0 ? <FormGroup controlId="orderid">
-            <Col componentClass={ControlLabel} sm={2}>
-              排序Id
-            </Col>
-            <Col sm={2}>
-              <FormControl
-                type="number"
-                value={this.state.formOrderId}
-                onChange={(e) => this.setState({ formOrderId: e.target.value, err: undefined })}
-              />
-            </Col>
+            <ControlLabel>排序Id</ControlLabel>
+            <FormControl
+              type="number"
+              value={this.state.formOrderId}
+              placeholder="请输入排序编号"
+              onChange={(e) => this.setState({ formOrderId: e.target.value })}
+            />
           </FormGroup> : null}
 
-          <FormGroup controlId="orderid">
-            <Col componentClass={ControlLabel} sm={2}>
-              发布状态
-            </Col>
-            <Col sm={2}>
-              <Toggle
-                checked={this.state.formIsPublish}
-                onChange={() => this.setState({ formIsPublish: !this.state.formIsPublish, err: undefined })}
-              />
-            </Col>
-          </FormGroup>
+          <FormToggle
+            label="发布状态"
+            checked={this.state.formIsPublish}
+            onChange={() => this.setState({ formIsPublish: !this.state.formIsPublish })}
+          />
 
-          <FormSubmitBtn controlId="submitBtn">
-            <Col smOffset={2} sm={2}>
-              <BtnSubmit onItemClick={this.handleSubmit} />
-            </Col>
-            <Col sm={2}>
-              <BtnCancel
-                onItemClick={() => { router.goBack(); }}
-              />
-            </Col>
+          <FormSubmitBtn>
+            <Row>
+              <Col sm={2}>
+                <BtnSubmit onItemClick={this.handleSubmit} />
+              </Col>
+              <Col sm={2}>
+                <BtnCancel
+                  onItemClick={() => { router.goBack(); }}
+                />
+              </Col>
+            </Row>
           </FormSubmitBtn>
 
         </Form>

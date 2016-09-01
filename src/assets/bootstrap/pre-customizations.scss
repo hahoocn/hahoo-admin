@@ -1,12 +1,21 @@
-$body-bg: #f8f8f8;
-$link-color: #337ab7;
-$navbar-default-link-color: #337ab7;
-$navbar-default-link-hover-color: #23527c;
-$navbar-default-link-hover-bg: darken(#f8f8f8, 6.5%);
-$navbar-default-link-active-color: #23527c;
+$body-bg: #f6f6f6;
+$link-color: #8f8f8f;
+$navbar-default-link-color: #444;
+$navbar-default-link-hover-color: #444;
+$navbar-default-link-hover-bg: #f0f0f0;
+$navbar-default-link-active-color: #fff;
+$navbar-default-link-active-bg: #5cc7d1;
+$navbar-default-bg: #444;
+$navbar-default-border: none;
+$btn-default-color: #666;
+$btn-default-border: #e5e5e5;
+$input-border: #e5e5e5;
+$input-color: #888;
+$input-color-placeholder: #ccc;
+$input-bg-disabled: #f3f3f3;
 
 // Bootstrap Variables
-$brand-primary: darken(#428bca, 6.5%);
+$brand-primary: #61c6d0;
 $brand-secondary: #e25139;
 $brand-success: #5cb85c;
 $brand-warning: #f0ad4e;

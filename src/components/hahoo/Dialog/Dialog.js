@@ -73,7 +73,7 @@ class Dialog extends React.Component {
     const buttonOk = <Tap
       component="div"
       onTap={this.handleOkClick}
-      className={`${styles.dialogBtnPrimary}${okBtnClass ? ` ${okBtnClass}` : ''}`}
+      className={okBtnClass || styles.dialogBtnPrimary}
     >{okText}</Tap>;
 
     let buttons = undefined;
@@ -81,7 +81,7 @@ class Dialog extends React.Component {
       const buttonCancel = <Tap
         component="div"
         onTap={this.handleCancelClick}
-        className={`${styles.dialogBtnDefault}${cancelBtnClass ? ` ${cancelBtnClass}` : ''}`}
+        className={cancelBtnClass || styles.dialogBtnDefault}
       >{cancelText}</Tap>;
 
       buttons = <div className={`${styles.dialogFt}${btnClass ? ` ${btnClass}` : ''}`}>

@@ -1,6 +1,10 @@
+.info {
+  color: #aaa;
+}
+
 @media (min-width: 768px) {
   .info {
     margin-bottom: 0;
-    padding-top: 7px;
+    padding-top: 2px;
   }
 }

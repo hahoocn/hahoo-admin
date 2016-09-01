@@ -8,10 +8,15 @@
   color: #777;
 }
 
+.pager a {
+  color: #5cc7d1;
+}
+
 @media (min-width: 768px) {
   .pagination {
     text-align: right;
   }
+
   .pageinfo {
     text-align: left;
   }
@@ -25,17 +30,21 @@
   .pagination {
     padding-bottom: 50px;
   }
+
   .pagination > ul > li > a,
   .pagination > ul > li > span {
     padding: 6px 10px;
     font-size: 14px;
   }
+
   .pager > ul {
     margin: 20px 0 0;
   }
+
   .pager > ul > li {
     margin: 0 2px;
   }
+
   .pager > ul > li > a {
     padding: 6px 20px;
   }

@@ -1,3 +1,11 @@
 .btn {
-  cursor: pointer;
+  font-size: 12px;
+}
+
+.publish {
+  color: #5cc7d1;
+}
+
+.unpublish {
+  color: #ff5158;
 }

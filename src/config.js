@@ -1,7 +1,7 @@
 module.exports = {
-  host: process.env.HOST || '192.168.31.214',
+  host: process.env.HOST || 'localhost',
   hotLoadPort: process.env.HOT_LOAD_PORT || 4000,
-  apiHost: process.env.APIHOST || '192.168.31.214',
+  apiHost: process.env.APIHOST || 'localhost',
   apiPort: process.env.APIPORT || 4040,
   app: {
     title: 'Hahoo Admin'

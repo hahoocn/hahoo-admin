@@ -23,6 +23,7 @@ import MenuItem from 'react-bootstrap/lib/MenuItem';
 
 class ListRowMain extends React.Component {
   static propTypes = {
+    module: React.PropTypes.string.isRequired,
     item: React.PropTypes.object.isRequired,
     onDelete: React.PropTypes.func,
     onPublish: React.PropTypes.func,
@@ -39,20 +40,20 @@ class ListRowMain extends React.Component {
 
   render() {
     const { item, onDelete, onPublish, onUnPublish, onMoveUp, onMoveDown } = this.props;
-    const { onMoveTo, onPopOrderIdPannel } = this.props;
+    const { onMoveTo, onPopOrderIdPannel, module } = this.props;
 
     return (
       <ListRow>
         <ListColText className="col-xs-12 col-sm-4">
-          <Link to={`/scml/view/${item.id}`}>
+          <Link to={`/${module}/view/${item.id}`}>
             {item.title}
           </Link>
         </ListColText>
 
         <ListColStatus className="col-xs-8 col-sm-3">
           {item.isPublish === 1 ?
-            <LabelPublish itemId={item.id} onTap={onUnPublish} /> :
-            <LabelUnPublish itemId={item.id} onTap={onPublish} />}
+            <LabelPublish /> :
+            <LabelUnPublish />}
           <ListColTime>{item.updateTime}</ListColTime>
         </ListColStatus>
 
@@ -66,10 +67,10 @@ class ListRowMain extends React.Component {
         />
 
         <ListColOptBtn className="col-xs-4 col-sm-2">
-          <LinkContainer to={`/scml/view/${item.id}`}>
+          <LinkContainer to={`/${module}/view/${item.id}`}>
             <BtnView eventKey="1" dropdown />
           </LinkContainer>
-          <LinkContainer to={`/scml/edit/${item.id}`}>
+          <LinkContainer to={`/${module}/edit/${item.id}`}>
             <BtnEdit eventKey="2" dropdown />
           </LinkContainer>
           <BtnDel eventKey="3" dropdown itemId={item.id} onItemClick={onDelete} />

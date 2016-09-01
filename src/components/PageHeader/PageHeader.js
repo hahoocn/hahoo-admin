@@ -12,7 +12,8 @@ class PageHeader extends React.Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    return nextProps.subTitle !== this.props.subTitle;
+    return nextProps.subTitle !== this.props.subTitle ||
+    nextProps.children !== this.props.children;
   }
 
   render() {

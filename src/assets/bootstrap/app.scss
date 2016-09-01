@@ -1,13 +1,24 @@
-.navbar-default .navbar-brand {
-  color: #777;
+.navbar-default .navbar-brand,
+.navbar-default .navbar-brand a {
+  color: #c3c3c3;
 }
 
-.navbar-default .navbar-brand:hover {
-  color: #333;
+.navbar-default .navbar-brand a:hover {
+  color: #aaa;
+  text-decoration: none;
 }
 
-.navbar-default .navbar-brand:focus {
-  color: #333;
+.navbar-default .navbar-brand a:focus {
+  text-decoration: none;
+}
+
+.navbar-default .navbar-brand img {
+  margin-top: -3px;
+  margin-right: 7px;
+}
+
+.navbar-static-top {
+  border: none;
 }
 
 .btn.btn-default {
@@ -16,18 +27,17 @@
 
 .pager li > a:focus {
   background-color: #fff;
-  color: #337ab7;
 }
 
 .pager li > a:hover {
-  background-color: #eee;
-  color: #22527b;
+  background-color: #f6f6f6;
 }
 
 @media (max-width: 768px) {
   a:hover {
     text-decoration: none;
   }
+
   .btn-default:focus {
     background-color: #fff;
     border-color: #ccc;

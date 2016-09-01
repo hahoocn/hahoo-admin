@@ -1,0 +1,11 @@
+.cate,
+.cate a {
+  color: #aaa;
+}
+
+@media (max-width: 768px) {
+  .cate,
+  .cate a {
+    margin-top: 5px;
+  }
+}

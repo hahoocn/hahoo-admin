@@ -5,3 +5,8 @@ export NotFound from './NotFound/NotFound';
 export Scml from './Scml/Scml';
 export ScmlEdit from './Scml/ScmlEdit';
 export ScmlView from './Scml/ScmlView';
+export Mcml from './Mcml/Mcml';
+export McmlView from './Mcml/McmlView';
+export McmlEdit from './Mcml/McmlEdit';
+export Cate from './Cate/Cate';
+export CateEdit from './Cate/CateEdit';

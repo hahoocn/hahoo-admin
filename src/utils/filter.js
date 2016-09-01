@@ -39,3 +39,23 @@ export function filterId(id) {
 
   return result;
 }
+
+export function filterParentId(id) {
+  let result = 0;
+  if (id) {
+    if (!isNumeric(`${id}`)) {
+      return -1;
+    }
+    try {
+      result = parseInt(id, 10);
+      if (result < 0) {
+        return -1;
+      }
+    } catch (e) {
+      console.log(e);
+      return -1;
+    }
+  }
+
+  return result;
+}

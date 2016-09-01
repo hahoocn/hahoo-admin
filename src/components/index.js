@@ -5,6 +5,7 @@ export List from './List/List';
 export ListRow from './ListRow/ListRow';
 export ListCol from './ListCol/ListCol';
 export ListColText from './ListCol/ListColText/ListColText';
+export ListColCate from './ListCol/ListColCate/ListColCate';
 export ListColStatus from './ListCol/ListColStatus/ListColStatus';
 export ListColTime from './ListCol/ListColTime/ListColTime';
 export ListColOrder from './ListCol/ListColOrder/ListColOrder';
@@ -28,15 +29,18 @@ export BtnCancel from './Btns/BtnCancel';
 export BtnSubmit from './Btns/BtnSubmit';
 export BtnBack from './Btns/BtnBack';
 export BtnRefresh from './Btns/BtnRefresh';
+export BtnUpLevel from './Btns/BtnUpLevel';
 
 export FormSubmitBtn from './Form/FormSubmitBtn/FormSubmitBtn';
 export Detail from './Form/Detail/Detail';
 export DetailTitle from './Form/DetailTitle/DetailTitle';
 export DetailContent from './Form/DetailContent/DetailContent';
+export CateSelect from './Form/CateSelect/CateSelect';
+export FormToggle from './Form/FormToggle/FormToggle';
 
 export Tap from './hahoo/Tap';
 export Loading from './hahoo/Loading/Loading';
 export Toast from './hahoo/Toast/Toast';
-export Dialog from './hahoo/Dialog/Dialog';
+export Dialog from './Dialog/Dialog';
 export Toggle from './hahoo/Toggle/Toggle';
 export ToastAlert from './hahoo/ToastAlert/ToastAlert';

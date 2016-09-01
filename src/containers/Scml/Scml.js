@@ -46,6 +46,7 @@ class Scml extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state.pageSize = config.pageSize;
     this.pageSelect = this.pageSelect.bind(this);
     this.handleDelConfirm = this.handleDelConfirm.bind(this);
     this.changeOrderIdConfirm = this.changeOrderIdConfirm.bind(this);
@@ -140,8 +141,6 @@ class Scml extends React.Component {
         this.context.router.replace('/notfound');
       } else {
         if (!data.isLoading && page !== data.page && !data.error && data.listStatus === 'ok') {
-          // console.log(page);
-          console.log(this.props.data.page);
           dispatch(getList(config.api.resource, page, this.state.pageSize));
         }
       }
@@ -230,6 +229,7 @@ class Scml extends React.Component {
       }
 
       const rows = data.items.map((item) => (<ListRow
+        module={config.module}
         key={item.id}
         item={item}
         onDelete={(id) => this.setState({ del: { isShowDialog: true, id } })}

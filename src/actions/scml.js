@@ -7,22 +7,23 @@ import { getListApi,
   addApi,
   updateApi
 } from '../api';
+const prefix = 'SCML';
 
-export const LIST_STATUS = 'LIST_STATUS';
-export const SHOULD_UPDATE = 'SHOULD_UPDATE';
-export const SCROLL_POSITION = 'SCROLL_POSITION';
-export const CLEAN_ERROR = 'CLEAN_ERROR';
-export const CLEAN_LOADING = 'CLEAN_LOADING';
+export const LIST_STATUS = `${prefix}_LIST_STATUS`;
+export const SHOULD_UPDATE = `${prefix}_SHOULD_UPDATE`;
+export const SCROLL_POSITION = `${prefix}_SCROLL_POSITION`;
+export const CLEAN_ERROR = `${prefix}_CLEAN_ERROR`;
+export const CLEAN_LOADING = `${prefix}_CLEAN_LOADING`;
 
-export const GET_LIST = 'GET_LIST';
-export const PUBLISH = 'PUBLISH';
-export const DELETE = 'DELETE';
-export const ORDER = 'ORDER';
-export const GET_DETAILS = 'GET_DETAILS';
-export const GET_EDIT_DETAILS = 'GET_EDIT_DETAILS';
-export const ADD = 'ADD';
-export const UPDATE = 'UPDATE';
-export const SET_ERROR = 'SET_ERROR';
+export const GET_LIST = `${prefix}_GET_LIST`;
+export const PUBLISH = `${prefix}_PUBLISH`;
+export const DELETE = `${prefix}_DELETE`;
+export const ORDER = `${prefix}_ORDER`;
+export const GET_DETAILS = `${prefix}_GET_DETAILS`;
+export const GET_EDIT_DETAILS = `${prefix}_GET_EDIT_DETAILS`;
+export const ADD = `${prefix}_ADD`;
+export const UPDATE = `${prefix}_UPDATE`;
+export const SET_ERROR = `${prefix}_SET_ERROR`;
 
 export const setListStatus = createAction(LIST_STATUS, 'status');
 export const shouldUpdate = createAction(SHOULD_UPDATE, 'shouldUpdate');

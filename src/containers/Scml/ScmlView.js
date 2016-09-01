@@ -19,7 +19,6 @@ import {
   ShowError
 } from '../../components';
 import { LinkContainer } from 'react-router-bootstrap';
-import Col from 'react-bootstrap/lib/Col';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import { filterId } from '../../utils/filter';
 import { getDetails, del, cleanError, cleanLoading } from '../../actions/scml';
@@ -149,48 +148,30 @@ class ScmlView extends React.Component {
         </PageHeader>
 
         <Detail>
-          <Col componentClass={DetailTitle} sm={2}>
-            标题
-          </Col>
-          <Col componentClass={DetailContent} sm={8}>
-            {data.details.title}
-          </Col>
+          <DetailTitle>标题</DetailTitle>
+          <DetailContent>{data.details.title}</DetailContent>
         </Detail>
 
         <Detail>
-          <Col componentClass={DetailTitle} sm={2}>
-            简介
-          </Col>
-          <Col componentClass={DetailContent} sm={8}>
-            {data.details.info}
-          </Col>
+          <DetailTitle>简介</DetailTitle>
+          <DetailContent>{data.details.info}</DetailContent>
         </Detail>
 
         <Detail>
-          <Col componentClass={DetailTitle} sm={2}>
-            更新时间
-          </Col>
-          <Col componentClass={DetailContent} sm={8}>
-            {data.details.updateTime}
-          </Col>
+          <DetailTitle>更新时间</DetailTitle>
+          <DetailContent>{data.details.updateTime}</DetailContent>
         </Detail>
 
         <Detail>
-          <Col componentClass={DetailTitle} sm={2}>
-            排序Id
-          </Col>
-          <Col componentClass={DetailContent} sm={8}>
-            {data.details.orderId}
-          </Col>
+          <DetailTitle>排序编码</DetailTitle>
+          <DetailContent>{data.details.orderId}</DetailContent>
         </Detail>
 
         <Detail>
-          <Col componentClass={DetailTitle} sm={2}>
-            发布状态
-          </Col>
-          <Col componentClass={DetailContent} sm={8}>
+          <DetailTitle>发布状态</DetailTitle>
+          <DetailContent>
             {data.details.isPublish === 1 ? <LabelPublish /> : <LabelUnPublish />}
-          </Col>
+          </DetailContent>
         </Detail>
 
       </div>;

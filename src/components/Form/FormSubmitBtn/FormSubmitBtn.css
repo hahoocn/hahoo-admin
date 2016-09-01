@@ -1,5 +1,5 @@
 .btngroup {
-  margin-top: 30px;
+  margin-top: 35px;
 }
 
 @media (min-width: 768px) {
@@ -12,6 +12,7 @@
   .btngroup div {
     margin-bottom: 10px;
   }
+
   .btngroup button {
     padding-top: 10px;
     padding-bottom: 10px;

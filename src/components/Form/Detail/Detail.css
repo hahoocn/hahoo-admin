@@ -1,3 +1,7 @@
+.detail {
+  padding: 0 15px;
+}
+
 @media (max-width: 992px) {
   .detail {
     margin-top: 18px;

@@ -6,12 +6,14 @@ class SideNavDropdown extends React.Component {
   static defaultProps = {
     isCollapsed: true,
     title: undefined,
-    isThirdLevel: false
+    isThirdLevel: false,
+    isActive: false
   }
 
   static propTypes = {
     isCollapsed: React.PropTypes.bool,
     isThirdLevel: React.PropTypes.bool,
+    isActive: React.PropTypes.bool,
     title: React.PropTypes.oneOfType([
       React.PropTypes.object,
       React.PropTypes.string
@@ -46,7 +48,7 @@ class SideNavDropdown extends React.Component {
     let arrow = 'fa arrow';
     arrow += this.state.collapsed ? '' : ' down';
     return (
-      <li>
+      <li className={this.props.isActive ? 'active' : ''}>
         <a onClick={this.handleClick}>
           {this.props.title}
           <span className={arrow}></span>

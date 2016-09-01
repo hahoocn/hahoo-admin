@@ -1,0 +1,13 @@
+.toggle {
+  float: left;
+}
+
+input.toggle:checked {
+  border-color: #b0e7e4;
+  background-color: #b0e7e4;
+}
+
+.label {
+  float: left;
+  margin: 13px 0 0 10px;
+}
