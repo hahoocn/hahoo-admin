@@ -42,19 +42,19 @@ class ToastAlert extends React.Component {
   }
 
   render() {
-    let toast = undefined;
+    let toast;
     if (!this.state.isClose) {
-      toast = <div>
-        {this.props.isBlock ? <div className={styles.mask}></div> : null}
+      toast = (<div>
+        {this.props.isBlock ? <div className={styles.mask} /> : null}
         <div className={styles.toast}>
-					{this.props.info}
+          {this.props.info}
         </div>
-      </div>;
+      </div>);
     }
 
     return (
       <div>
-				{toast && toast}
+        {toast && toast}
       </div>
     );
   }

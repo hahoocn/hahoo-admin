@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './ListColOptBtn.css';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import styles from './ListColOptBtn.css';
 
 class ListColOptBtn extends React.Component {
   static propTypes = {
@@ -26,7 +26,7 @@ class ListColOptBtn extends React.Component {
           </DropdownButton>
         </ButtonToolbar>
       </div>
-		);
+    );
   }
 }
 

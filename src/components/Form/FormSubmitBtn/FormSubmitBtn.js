@@ -15,7 +15,7 @@ class FormSubmitBtn extends React.Component {
       <div className={`${styles.btngroup}${className ? ` ${className}` : ''}`} {...rest}>
         {children}
       </div>
-		);
+    );
   }
 }
 

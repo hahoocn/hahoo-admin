@@ -1,13 +1,13 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
-import config from './config';
 import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import FormControl from 'react-bootstrap/lib/FormControl';
-import { filterPage } from '../../utils/filter';
-import ListRow from './ListRow';
 import toFloat from 'validator/lib/toFloat';
 import isDecimal from 'validator/lib/isDecimal';
+import config from './config';
+import { filterPage } from '../../utils/filter';
+import ListRow from './ListRow';
 
 import {
   Navbar,
@@ -139,10 +139,8 @@ class Mcml extends React.Component {
       const page = filterPage(this.props.params.page);
       if (page === -1) {
         this.context.router.replace('/notfound');
-      } else {
-        if (!data.isLoading && page !== data.page && !data.error && data.listStatus === 'ok') {
-          dispatch(getList(config.api.resource, page, this.state.pageSize));
-        }
+      } else if (!data.isLoading && page !== data.page && !data.error && data.listStatus === 'ok') {
+        dispatch(getList(config.api.resource, page, this.state.pageSize));
       }
 
       if (prevState.isLoading && !this.state.isLoading) {
@@ -194,7 +192,7 @@ class Mcml extends React.Component {
     const { page } = params;
     const { pageSize } = this.state;
 
-    let loading = undefined;
+    let loading;
     if (data.isLoading || this.state.isLoading) {
       loading = <Toast type="loading" title="加载数据" isBlock />;
     }
@@ -202,55 +200,55 @@ class Mcml extends React.Component {
       loading = <Toast type="loading" title="正在更新" isBlock />;
     }
 
-    let error = undefined;
+    let error;
     if (!loading && data.error) {
       error = <ShowError error={data.error} key={Math.random()} onClose={() => dispatch(cleanError())} />;
     }
 
-    let pageWrapper = undefined;
-    let dialog = undefined;
+    let pageWrapper;
+    let dialog;
     if (!this.state.isLoading && data.items && data.items.length > 0) {
       if (this.state.del.isShowDialog) {
         dialog = <Dialog title="确认" info="您确定删除吗？" type="confirm" onClick={this.handleDelConfirm} />;
       }
       if (this.state.order.isShowDialog) {
-        dialog = <Dialog
+        dialog = (<Dialog
           title="修改排序码"
           info={<FormControl
             type="number"
             value={this.state.order.newOrderId}
-            onChange={(e) => this.setState({
+            onChange={e => this.setState({
               order: Object.assign({}, this.state.order, { newOrderId: e.target.value })
             })}
           />}
           type="confirm"
           onClick={this.changeOrderIdConfirm}
-        />;
+        />);
       }
 
-      const rows = data.items.map((item) => (<ListRow
+      const rows = data.items.map(item => (<ListRow
         module={config.module}
         key={item.id}
         item={item}
-        onDelete={(id) => this.setState({ del: { isShowDialog: true, id } })}
-        onPublish={(id) => dispatch(publish(config.api.resource, id, true))}
-        onUnPublish={(id) => dispatch(publish(config.api.resource, id, false))}
-        onMoveUp={(id) => dispatch(order(config.api.resource, id, 'up', page, pageSize))}
-        onMoveDown={(id) => dispatch(order(config.api.resource, id, 'down', page, pageSize))}
+        onDelete={id => this.setState({ del: { isShowDialog: true, id } })}
+        onPublish={id => dispatch(publish(config.api.resource, id, true))}
+        onUnPublish={id => dispatch(publish(config.api.resource, id, false))}
+        onMoveUp={id => dispatch(order(config.api.resource, id, 'up', page, pageSize))}
+        onMoveDown={id => dispatch(order(config.api.resource, id, 'down', page, pageSize))}
         onMoveTo={(id, orderId) => dispatch(order(config.api.resource, id, 'changeOrderId', page, pageSize, orderId))}
         onPopOrderIdPannel={(id, orderId) => this.setState({
           order: { isShowDialog: true, id, orderId, newOrderId: orderId }
         })}
       />));
 
-      const pagination = <Pagination
+      const pagination = (<Pagination
         page={data.page}
         pageSize={pageSize}
         recordCount={data.totalCount}
         pageSelect={this.pageSelect}
-      />;
+      />);
 
-      pageWrapper = <div>
+      pageWrapper = (<div>
         <PageHeader title={config.moduleName} subTitle="列表">
           <ButtonToolbar>
             <BtnAdd onItemClick={() => this.context.router.push(`/${config.module}/add`)} />
@@ -259,11 +257,11 @@ class Mcml extends React.Component {
         </PageHeader>
 
         <List>
-        {rows && rows}
+          {rows && rows}
         </List>
 
         {pagination && pagination}
-      </div>;
+      </div>);
     }
 
     return (
@@ -279,7 +277,7 @@ class Mcml extends React.Component {
         </PageWrapper>
 
       </div>
-		);
+    );
   }
 }
 

@@ -1,8 +1,7 @@
 import React from 'react';
-import styles from './PageHeader.css';
-
 import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
+import styles from './PageHeader.css';
 
 class PageHeader extends React.Component {
   static propTypes = {
@@ -27,7 +26,7 @@ class PageHeader extends React.Component {
           </div>
         </Col>
       </Row>
-		);
+    );
   }
 }
 

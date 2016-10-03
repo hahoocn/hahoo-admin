@@ -15,7 +15,7 @@ class ListColCate extends React.Component {
       <div className={`${styles.cate}${className ? ` ${className}` : ''}`} {...rest}>
         {children}
       </div>
-		);
+    );
   }
 }
 

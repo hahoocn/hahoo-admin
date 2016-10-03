@@ -14,7 +14,7 @@ class PageWrapper extends React.Component {
         {this.props.children}
         <div className={styles.foot} />
       </div>
-		);
+    );
   }
 }
 

@@ -1,6 +1,8 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import { LinkContainer } from 'react-router-bootstrap';
+import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import config from './config';
 import {
   Navbar,
@@ -18,8 +20,6 @@ import {
   Dialog,
   ShowError
 } from '../../components';
-import { LinkContainer } from 'react-router-bootstrap';
-import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import { filterId } from '../../utils/filter';
 import { getDetails, del, cleanError, cleanLoading } from '../../actions/mcml';
 
@@ -54,12 +54,10 @@ class McmlView extends React.Component {
     const id = filterId(this.props.params.id);
     if (id === -1) {
       this.context.router.replace('/notfound');
-    } else {
-      if (!data.details || parseInt(data.details.id, 10) !== id ||
-        ((Date.now() - data.details.receivedAt) > config.detailsRefreshTime)) {
-        dispatch(getDetails(config.api.resource, id));
-        this.setState({ isEnterLoading: true });
-      }
+    } else if (!data.details || parseInt(data.details.id, 10) !== id ||
+      ((Date.now() - data.details.receivedAt) > config.detailsRefreshTime)) {
+      dispatch(getDetails(config.api.resource, id));
+      this.setState({ isEnterLoading: true });
     }
 
     if (data.error) {
@@ -117,26 +115,26 @@ class McmlView extends React.Component {
 
   render() {
     const { data, dispatch } = this.props;
-    let loading = undefined;
+    let loading;
     if (data.isLoading) {
       loading = <Toast type="loading" title="加载数据" isBlock />;
     }
 
-    let error = undefined;
+    let error;
     if (!loading && data.error) {
-      error = <ShowError
+      error = (<ShowError
         error={data.error} key={Math.random()}
         onClose={() => dispatch(cleanError())}
-      />;
+      />);
     }
 
-    let pageWrapper = undefined;
-    let dialog = undefined;
+    let pageWrapper;
+    let dialog;
     if (data.details && !this.state.isEnterLoading) {
       if (this.state.del.isShowDialog) {
         dialog = <Dialog title="确认" info="您确定删除吗？" type="confirm" onClick={this.handleDelConfirm} />;
       }
-      pageWrapper = <div>
+      pageWrapper = (<div>
         <PageHeader title={config.moduleName} subTitle="详情">
           <ButtonToolbar>
             <BtnBack />
@@ -179,7 +177,7 @@ class McmlView extends React.Component {
           </DetailContent>
         </Detail>
 
-      </div>;
+      </div>);
     }
 
     return (

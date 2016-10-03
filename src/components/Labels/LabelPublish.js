@@ -6,7 +6,7 @@ class LabelPublish extends React.Component {
   render() {
     return (
       <span className={`${styles.btn} ${styles.publish}`}>已发布</span>
-		);
+    );
   }
 }
 

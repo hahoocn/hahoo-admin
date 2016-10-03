@@ -12,19 +12,19 @@ class Mask extends React.Component {
 
   render() {
     const { className, onClick, ...rest } = this.props;
-    let content = undefined;
+    let content;
     if (onClick) {
-      content = <Tap
+      content = (<Tap
         component="div"
         className={`${styles.mask}${className ? ` ${className}` : ''}`}
         onTap={onClick}
         {...rest}
-      />;
+      />);
     } else {
-      content = <div
+      content = (<div
         className={`${styles.mask}${className ? ` ${className}` : ''}`}
         {...rest}
-      />;
+      />);
     }
 
     return content;

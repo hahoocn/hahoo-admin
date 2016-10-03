@@ -23,7 +23,7 @@ class BtnCancel extends React.Component {
       <Tap onTap={onItemClick} className={style} {...rest}>
         <i className="fa fa-times fa-fw" /> {title}
       </Tap>
-		);
+    );
   }
 }
 

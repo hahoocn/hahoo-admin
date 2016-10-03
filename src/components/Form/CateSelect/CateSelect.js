@@ -8,7 +8,7 @@ function makeOptions(options, i) {
   for (let j = 0; j < deep; j++) {
     prefix = `\u3000${prefix}`;
   }
-  for (let option of options) {
+  for (const option of options) {
     items.push(<option key={option.id} value={option.id}>{prefix}{option.title}</option>);
     if (option.subItems && option.subItems.length > 0) {
       deep++;
@@ -59,7 +59,7 @@ class CateSelect extends React.Component {
       >
         {items}
       </FormControl>
-		);
+    );
   }
 }
 

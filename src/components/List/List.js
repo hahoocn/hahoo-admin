@@ -15,7 +15,7 @@ class List extends React.Component {
           {this.props.children}
         </ul>
       </div>
-		);
+    );
   }
 }
 

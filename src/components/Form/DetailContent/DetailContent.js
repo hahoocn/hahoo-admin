@@ -15,7 +15,7 @@ class DetailContent extends React.Component {
       <div className={`${styles.info}${className ? ` ${className}` : ''}`} {...rest}>
         {children}
       </div>
-		);
+    );
   }
 }
 

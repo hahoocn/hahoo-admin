@@ -1,6 +1,14 @@
 import React from 'react';
 import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
+import Form from 'react-bootstrap/lib/Form';
+import FormGroup from 'react-bootstrap/lib/FormGroup';
+import Col from 'react-bootstrap/lib/Col';
+import ControlLabel from 'react-bootstrap/lib/ControlLabel';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import Row from 'react-bootstrap/lib/Row';
+import isFloat from 'validator/lib/isFloat';
+import toFloat from 'validator/lib/toFloat';
 import config from './config';
 import {
   Navbar,
@@ -17,15 +25,6 @@ import {
 
 import { add, update, getEditDetails, cleanError, cleanLoading, setError, getCate } from '../../actions/mcml';
 import { responseError } from '../../api/utils';
-
-import Form from 'react-bootstrap/lib/Form';
-import FormGroup from 'react-bootstrap/lib/FormGroup';
-import Col from 'react-bootstrap/lib/Col';
-import ControlLabel from 'react-bootstrap/lib/ControlLabel';
-import FormControl from 'react-bootstrap/lib/FormControl';
-import Row from 'react-bootstrap/lib/Row';
-import isFloat from 'validator/lib/isFloat';
-import toFloat from 'validator/lib/toFloat';
 
 class McmlEdit extends React.Component {
   static propTypes = {
@@ -158,29 +157,29 @@ class McmlEdit extends React.Component {
       subTitle = '修改';
     }
 
-    let loading = undefined;
+    let loading;
     if (data.isLoading) {
       loading = <Toast type="loading" title="加载数据" isBlock />;
     }
 
-    let submiting = undefined;
+    let submiting;
     if (data.isUpdating) {
       submiting = <Toast type="loading" title="正在提交" isBlock />;
     }
 
-    let success = undefined;
+    let success;
     if (this.state.isSuccess) {
       success = <Toast type="success" title="操作成功" onClose={this.handleSuccess} isBlock />;
     }
 
-    let error = undefined;
+    let error;
     if (!loading && data.error) {
       error = <ShowError error={data.error} key={Math.random()} onClose={() => dispatch(cleanError())} />;
     }
 
-    let pageWrapper = undefined;
+    let pageWrapper;
     if (!data.isLoading) {
-      pageWrapper = <div>
+      pageWrapper = (<div>
         <PageHeader title={config.moduleName} subTitle={subTitle} />
 
         <Form onSubmit={this.handleSubmit}>
@@ -190,7 +189,7 @@ class McmlEdit extends React.Component {
               type="text"
               value={this.state.formTitle}
               placeholder="请输入标题"
-              onChange={(e) => this.setState({ formTitle: e.target.value })}
+              onChange={e => this.setState({ formTitle: e.target.value })}
             />
           </FormGroup>
 
@@ -198,7 +197,7 @@ class McmlEdit extends React.Component {
             <ControlLabel>分类</ControlLabel>
             <CateSelect
               value={this.state.formCateId}
-              onChange={(e) => this.setState({ formCateId: e.target.value })}
+              onChange={e => this.setState({ formCateId: e.target.value })}
               options={data.cates}
             />
           </FormGroup>
@@ -210,7 +209,7 @@ class McmlEdit extends React.Component {
               rows="6"
               value={this.state.formInfo}
               placeholder="请输入简介"
-              onChange={(e) => this.setState({ formInfo: e.target.value })}
+              onChange={e => this.setState({ formInfo: e.target.value })}
             />
           </FormGroup>
 
@@ -220,7 +219,7 @@ class McmlEdit extends React.Component {
               type="number"
               value={this.state.formOrderId}
               placeholder="请输入排序编号"
-              onChange={(e) => this.setState({ formOrderId: e.target.value })}
+              onChange={e => this.setState({ formOrderId: e.target.value })}
             />
           </FormGroup> : null}
 
@@ -244,7 +243,7 @@ class McmlEdit extends React.Component {
           </FormSubmitBtn>
 
         </Form>
-      </div>;
+      </div>);
     }
 
     return (

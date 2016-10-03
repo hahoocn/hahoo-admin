@@ -1,10 +1,10 @@
 import React from 'react';
-import styles from './ListColOrder.css';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
-import Tap from '../../hahoo/Tap';
 import toFloat from 'validator/lib/toFloat';
 import isDecimal from 'validator/lib/isDecimal';
+import Tap from '../../hahoo/Tap';
+import styles from './ListColOrder.css';
 
 class ListColOrder extends React.Component {
   static propTypes = {
@@ -82,7 +82,7 @@ class ListColOrder extends React.Component {
           />
         </FormGroup>
       </div>
-		);
+    );
   }
 }
 

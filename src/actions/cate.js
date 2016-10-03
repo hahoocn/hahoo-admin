@@ -7,6 +7,7 @@ import { getListApi,
   addApi,
   updateApi
 } from '../api';
+
 const prefix = 'CATE';
 
 export const LIST_STATUS = `${prefix}_LIST_STATUS`;

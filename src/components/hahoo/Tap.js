@@ -3,12 +3,11 @@ import Tappable from 'react-tappable';
 
 class Tap extends React.Component {
   static propTypes = {
-    children: React.PropTypes.node,
-    tmoveThreshold: React.PropTypes.number
+    children: React.PropTypes.node
   }
 
   static defaultProps = {
-    tmoveThreshold: 0
+    pressDelay: 0
   }
 
   render() {

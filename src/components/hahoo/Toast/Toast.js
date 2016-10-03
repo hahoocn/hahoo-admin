@@ -49,7 +49,7 @@ class Toast extends React.Component {
   }
 
   render() {
-    let icon = undefined;
+    let icon;
     switch (this.props.type) {
       case 'success':
         icon = dhIcon;
@@ -68,29 +68,29 @@ class Toast extends React.Component {
         break;
     }
 
-    let iconbox = undefined;
+    let iconbox;
     if (this.props.type === 'loading') {
       iconbox = icon;
     } else {
-      iconbox = <div className={styles.iconToast}>
+      iconbox = (<div className={styles.iconToast}>
         <img src={icon} role="presentation" />
-      </div>;
+      </div>);
     }
 
-    let toast = undefined;
+    let toast;
     if (!this.state.isClose) {
-      toast = <div>
-        {this.props.isBlock ? <div className={styles.mask}></div> : null}
+      toast = (<div>
+        {this.props.isBlock ? <div className={styles.mask} /> : null}
         <div className={styles.toast}>
-					{iconbox}
+          {iconbox}
           <div className={styles.title}>{this.props.title}</div>
         </div>
-      </div>;
+      </div>);
     }
 
     return (
       <div>
-				{toast && toast}
+        {toast && toast}
       </div>
     );
   }

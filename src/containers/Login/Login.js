@@ -1,11 +1,10 @@
 import React from 'react';
 import Helmet from 'react-helmet';
-import config from '../../config';
-
 import Panel from 'react-bootstrap/lib/Panel';
 import Button from 'react-bootstrap/lib/Button';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
+import config from '../../config';
 
 class Login extends React.Component {
   constructor(props) {
@@ -38,6 +37,7 @@ class Login extends React.Component {
 
   render() {
     const styles = require('./Login.css');
+
     const pageTitle = `Login - ${config.app.title}`;
     const isLoading = this.state.isLoading;
     return (
@@ -88,7 +88,7 @@ class Login extends React.Component {
         </div>
 
       </div>
-		);
+    );
   }
 }
 

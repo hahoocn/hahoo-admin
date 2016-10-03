@@ -15,7 +15,7 @@ class MainDialog extends React.Component {
     const { type } = this.props;
     return (
       <Dialog okBtnClass={type === 'confirm' ? styles.dialog : null} {...this.props} />
-		);
+    );
   }
 }
 

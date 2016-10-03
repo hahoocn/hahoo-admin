@@ -13,7 +13,7 @@ class ListCol extends React.Component {
       <div {...rest}>
         {children}
       </div>
-		);
+    );
   }
 }
 

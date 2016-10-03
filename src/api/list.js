@@ -3,14 +3,14 @@ import { filterPage } from '../utils/filter';
 import { responseError } from './utils';
 
 export async function getListApi(url, page, pageSize, othQs) {
-  let fPage = undefined;
+  let fPage;
   if (page && typeof page !== 'function') {
     fPage = filterPage(page);
     if (fPage === -1) {
       return Promise.reject(responseError('页码错误'));
     }
   }
-  let qs = undefined;
+  let qs;
   if (fPage) {
     qs = Object.assign({}, qs, { page: fPage });
   }

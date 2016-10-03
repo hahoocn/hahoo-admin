@@ -15,7 +15,7 @@ class ListRow extends React.Component {
           {this.props.children}
         </div>
       </li>
-		);
+    );
   }
 }
 

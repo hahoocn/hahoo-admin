@@ -59,59 +59,59 @@ class Dialog extends React.Component {
     const { titleClassName, infoClassName, okBtnClass, cancelBtnClass } = this.props;
     const { btnClass } = this.props;
 
-    let dialogTitle = undefined;
+    let dialogTitle;
     if (title) {
-      dialogTitle = <div className={styles.dialogHd}>
+      dialogTitle = (<div className={styles.dialogHd}>
         <strong
           className={`${styles.dialogTitle}${titleClassName ? ` ${titleClassName}` : ''}`}
         >
           {title}
         </strong>
-      </div>;
+      </div>);
     }
 
-    const buttonOk = <Tap
+    const buttonOk = (<Tap
       component="div"
       onTap={this.handleOkClick}
       className={okBtnClass || styles.dialogBtnPrimary}
-    >{okText}</Tap>;
+    >{okText}</Tap>);
 
-    let buttons = undefined;
+    let buttons;
     if (type === 'confirm') {
-      const buttonCancel = <Tap
+      const buttonCancel = (<Tap
         component="div"
         onTap={this.handleCancelClick}
         className={cancelBtnClass || styles.dialogBtnDefault}
-      >{cancelText}</Tap>;
+      >{cancelText}</Tap>);
 
-      buttons = <div className={`${styles.dialogFt}${btnClass ? ` ${btnClass}` : ''}`}>
+      buttons = (<div className={`${styles.dialogFt}${btnClass ? ` ${btnClass}` : ''}`}>
         {buttonCancel}
         {buttonOk}
-      </div>;
+      </div>);
     } else {
       buttons = <div className={styles.dialogFt}>{buttonOk}</div>;
     }
 
     const mainClass = (type === 'confirm') ? styles.dialogConfirm : '';
 
-    let dialog = undefined;
+    let dialog;
     if (!this.state.isClose) {
-      dialog = <div className={`${mainClass}${className ? ` ${className}` : ''}`}>
+      dialog = (<div className={`${mainClass}${className ? ` ${className}` : ''}`}>
         <div className={styles.dialog}>
-          <div className={styles.dialogHdBlank}></div>
-					{dialogTitle && dialogTitle}
+          <div className={styles.dialogHdBlank} />
+          {dialogTitle && dialogTitle}
           <div
             className={`${styles.dialogBd}${infoClassName ? ` ${infoClassName}` : ''}`}
           >{info}</div>
-					{buttons && buttons}
+          {buttons && buttons}
         </div>
         <Mask className={bgClass} />
-      </div>;
+      </div>);
     }
 
     return (
       <div>
-				{dialog && dialog}
+        {dialog && dialog}
       </div>
     );
   }

@@ -15,7 +15,7 @@ class ListColText extends React.Component {
       <div className={`${styles.text}${className ? ` ${className}` : ''}`} {...rest}>
         {children}
       </div>
-		);
+    );
   }
 }
 

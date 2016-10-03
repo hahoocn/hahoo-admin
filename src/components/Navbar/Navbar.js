@@ -1,5 +1,4 @@
 import React from 'react';
-import config from '../../config';
 import IndexLink from 'react-router/lib/IndexLink';
 import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
 import Navbar from 'react-bootstrap/lib/Navbar';
@@ -7,6 +6,7 @@ import Nav from 'react-bootstrap/lib/Nav';
 import NavItem from 'react-bootstrap/lib/NavItem';
 import NavDropdown from 'react-bootstrap/lib/NavDropdown';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
+import config from '../../config';
 import logoIcon from '../../assets/images/logo.svg';
 import SideNavDropdown from '../SideNavDropdown/SideNavDropdown';
 import './Navbar.css';
@@ -29,7 +29,7 @@ class TopNavbar extends React.Component {
   }
 
   onNavbarToggle = () => {
-    this.setState({ navExpanded: ! this.state.navExpanded });
+    this.setState({ navExpanded: !this.state.navExpanded });
   }
 
   render() {
@@ -144,7 +144,7 @@ class TopNavbar extends React.Component {
         </Navbar.Collapse>
 
       </Navbar>
-		);
+    );
   }
 }
 

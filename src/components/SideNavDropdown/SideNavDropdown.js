@@ -51,7 +51,7 @@ class SideNavDropdown extends React.Component {
       <li className={this.props.isActive ? 'active' : ''}>
         <a onClick={this.handleClick}>
           {this.props.title}
-          <span className={arrow}></span>
+          <span className={arrow} />
         </a>
         <Collapse in={!this.state.collapsed}>
           <ul className={navClass}>
@@ -59,7 +59,7 @@ class SideNavDropdown extends React.Component {
           </ul>
         </Collapse>
       </li>
-		);
+    );
   }
 }
 

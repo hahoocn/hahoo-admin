@@ -12,7 +12,7 @@ class ShowError extends React.Component {
   render() {
     const { error, onClose, ...rest } = this.props;
     const { errcode, errmsg, status } = error;
-    let errorMsg = undefined;
+    let errorMsg;
     if (errcode && errcode === -1) {
       errorMsg = '遇到错误';
     }
@@ -47,7 +47,7 @@ class ShowError extends React.Component {
     }
     return (
       <ToastAlert info={errorMsg} onClose={onClose} {...rest} />
-		);
+    );
   }
 }
 

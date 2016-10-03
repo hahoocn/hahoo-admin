@@ -1,7 +1,7 @@
 import express from 'express';
+import bodyParser from 'body-parser';
 import config from '../src/config';
 import { data, cateData, cateData0, cateData1, cateData11 } from './data';
-import bodyParser from 'body-parser';
 
 const host = config.apiHost;
 const port = config.apiPort;

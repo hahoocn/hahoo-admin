@@ -15,7 +15,7 @@ class ListColStatus extends React.Component {
       <div className={`${styles.status}${className ? ` ${className}` : ''}`} {...rest}>
         {children}
       </div>
-		);
+    );
   }
 }
 

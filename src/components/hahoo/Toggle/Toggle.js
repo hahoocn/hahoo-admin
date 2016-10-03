@@ -18,7 +18,7 @@ class Toggle extends React.Component {
         type="checkbox"
         {...rest}
       />
-		);
+    );
   }
 }
 

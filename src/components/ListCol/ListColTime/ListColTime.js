@@ -15,7 +15,7 @@ class ListColTime extends React.Component {
       <div className={`${styles.publishtime}${className ? ` ${className}` : ''}`} {...rest}>
         {children}
       </div>
-		);
+    );
   }
 }
 

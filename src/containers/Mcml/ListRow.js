@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'react-router/lib/Link';
 import { LinkContainer } from 'react-router-bootstrap';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
 import {
   ListRow,
   ListColText,
@@ -20,7 +21,6 @@ import {
   BtnMoveDown,
   BtnMoveId,
 } from '../../components';
-import MenuItem from 'react-bootstrap/lib/MenuItem';
 
 class ListRowMain extends React.Component {
   static propTypes = {

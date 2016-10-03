@@ -16,9 +16,9 @@ class FormToggle extends React.Component {
       <div className={`${className ? `${className}` : ''}`}>
         <Toggle className={styles.toggle} {...rest} />
         <div className={styles.label}>{label}</div>
-        <div className="clearfix"></div>
+        <div className="clearfix" />
       </div>
-		);
+    );
   }
 }
 

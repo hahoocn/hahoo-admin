@@ -25,7 +25,7 @@ class BtnSubmit extends React.Component {
       <Tap onTap={onItemClick} className={style} {...rest}>
         <i className="fa fa-check fa-fw" /> {title}
       </Tap>
-		);
+    );
   }
 }
 

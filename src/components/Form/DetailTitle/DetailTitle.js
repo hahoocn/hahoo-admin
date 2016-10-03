@@ -15,7 +15,7 @@ class DetailTitle extends React.Component {
       <div className={`${styles.title}${className ? ` ${className}` : ''}`} {...rest}>
         {children}
       </div>
-		);
+    );
   }
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import styles from './Pagination.css';
 import Pagination from 'react-bootstrap/lib/Pagination';
 import Pager from 'react-bootstrap/lib/Pager';
+import styles from './Pagination.css';
 
 class HahooPagination extends React.Component {
   static propTypes = {
@@ -54,7 +54,7 @@ class HahooPagination extends React.Component {
     delete rest.pageSelect;
 
     const pageCount = Math.ceil(recordCount / pageSize);
-    const recordFrom = (page - 1) * pageSize + 1;
+    const recordFrom = ((page - 1) * pageSize) + 1;
     let recordTo = page * pageSize;
     if (recordTo > recordCount) {
       recordTo = recordCount;
@@ -86,7 +86,7 @@ class HahooPagination extends React.Component {
           />
         </div>
       </div>
-		);
+    );
   }
 }
 

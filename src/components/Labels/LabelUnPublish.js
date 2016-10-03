@@ -6,7 +6,7 @@ class LabelUnPublish extends React.Component {
   render() {
     return (
       <span className={`${styles.btn} ${styles.unpublish}`}>未发布</span>
-		);
+    );
   }
 }
 

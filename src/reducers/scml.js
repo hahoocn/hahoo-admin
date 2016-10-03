@@ -19,9 +19,9 @@ import {
 } from '../actions/scml';
 
 const loadingRequest = { isLoading: true, error: undefined };
-const loadingFailure = (err) => ({ isLoading: false, error: err });
+const loadingFailure = err => ({ isLoading: false, error: err });
 const updatingRequest = { isUpdating: true, error: undefined };
-const updatingFailure = (err) => ({ isUpdating: false, error: err });
+const updatingFailure = err => ({ isUpdating: false, error: err });
 
 const defaultState = {
   isLoading: false,
