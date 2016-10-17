@@ -1,13 +1,17 @@
 import { request, apiUrl } from './config';
 import { responseError } from './utils';
 
-export async function orderApi(resource, id, type, page, pageSize, newOrderId) {
-  const body = { type };
+export async function orderApi(resource, id, type, page, pageSize, newOrderId, othQs) {
+  let body = { type };
   if (type === 'changeOrderId') {
     if (typeof newOrderId !== 'number') {
       return Promise.reject('排序Id错误');
     }
     body.orderId = newOrderId;
+  }
+
+  if (othQs && typeof othQs !== 'function') {
+    body = Object.assign({}, body, othQs);
   }
 
   try {
@@ -22,7 +26,7 @@ export async function orderApi(resource, id, type, page, pageSize, newOrderId) {
       return Promise.reject(responseError(res));
     }
 
-    res.req = { resource, id, type, page, pageSize };
+    res.req = { resource, id, type, page, pageSize, othQs };
 
     return Promise.resolve(res);
   } catch (err) {

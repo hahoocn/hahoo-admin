@@ -63,11 +63,12 @@ export const del = createActionAsync(DELETE, deleteApi, {
 export const order = createActionAsync(ORDER, orderApi, {
   onRequest(dispatch) {
     dispatch(shouldUpdate(true));
+    dispatch(setListStatus('order'));
   },
   onSuccess(dispatch, res) {
     dispatch(shouldUpdate(false));
-    const { resource, page, pageSize } = res.req;
-    dispatch(getList(resource, page, pageSize));
+    const { resource, page, pageSize, othQs } = res.req;
+    dispatch(getList(resource, page, pageSize, othQs));
   }
 });
 

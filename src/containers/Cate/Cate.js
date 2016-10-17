@@ -137,6 +137,8 @@ class Cate extends React.Component {
           window.scrollTo(0, 0);
           this.context.router.push(`/${config.module}/list/${data.page}?parentid=${data.parentId}`);
           break;
+        case 'order':
+          break;
         default:
           window.scrollTo(0, 0);
       }
@@ -188,8 +190,9 @@ class Cate extends React.Component {
         const newOrderId = toFloat(`${this.state.order.newOrderId}`);
         if (newOrderId && newOrderId > 0 && newOrderId !== toFloat(`${this.state.order.orderId}`)) {
           const { dispatch, params } = this.props;
+          const parentId = filterParentId(this.props.location.query.parentid);
           dispatch(order(config.api.resource, this.state.order.id,
-            'changeOrderId', params.page, this.state.pageSize, newOrderId));
+            'changeOrderId', params.page, this.state.pageSize, newOrderId, { parentId }));
         }
       }
     }
@@ -249,9 +252,10 @@ class Cate extends React.Component {
           onDelete={id => this.setState({ del: { isShowDialog: true, id } })}
           onPublish={id => dispatch(publish(config.api.resource, id, true))}
           onUnPublish={id => dispatch(publish(config.api.resource, id, false))}
-          onMoveUp={id => dispatch(order(config.api.resource, id, 'up', page, pageSize))}
-          onMoveDown={id => dispatch(order(config.api.resource, id, 'down', page, pageSize))}
-          onMoveTo={(id, orderId) => dispatch(order(config.api.resource, id, 'changeOrderId', page, pageSize, orderId))}
+          onMoveUp={id => dispatch(order(config.api.resource, id, 'up', page, pageSize, undefined, { parentId }))}
+          onMoveDown={id => dispatch(order(config.api.resource, id, 'down', page, pageSize, undefined, { parentId }))}
+          onMoveTo={(id, orderId) =>
+            dispatch(order(config.api.resource, id, 'changeOrderId', page, pageSize, orderId, { parentId }))}
           onPopOrderIdPannel={(id, orderId) => this.setState({
             order: { isShowDialog: true, id, orderId, newOrderId: orderId }
           })}
