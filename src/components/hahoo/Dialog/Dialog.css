@@ -55,7 +55,6 @@
   display: block;
   flex: 1;
   text-decoration: none;
-  tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .dialogFt::after {
