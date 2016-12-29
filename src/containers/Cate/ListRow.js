@@ -71,7 +71,7 @@ class ListRowMain extends React.Component {
 
           {item.isPublish === 1 ?
             <BtnUnPub eventKey="5" dropdown itemId={item.id} onItemClick={onUnPublish} /> :
-              <BtnPub eventKey="4" dropdown itemId={item.id} onItemClick={onPublish} />}
+            <BtnPub eventKey="4" dropdown itemId={item.id} onItemClick={onPublish} />}
 
           <MenuItem divider className="visible-xs-block" />
 
